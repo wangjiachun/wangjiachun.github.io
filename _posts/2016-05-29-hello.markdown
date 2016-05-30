@@ -84,7 +84,9 @@ git push -u origin master
 ##　参考github教程
 
 [git - 简明指南](http://rogerdudler.github.io/git-guide/index.zh.html)网站高大上
+
 [git-pages](https://pages.github.com)
+
 [通过GitHub Pages建立个人站点](http://www.cnblogs.com/purediy/archive/2013/03/07/2948892.html)
 
 ## 总结
