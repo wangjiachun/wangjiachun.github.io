@@ -83,7 +83,7 @@ git push -u origin master
 
 ##　参考github教程
 
-[git - 简明指南](http://rogerdudler.github.io/git-guide/index.zh.html)网站高大上
+[git - 简明指南](http://rogerdudler.github.io/git-guide/index.zh.html)  网站高大上
 
 [git-pages](https://pages.github.com)
 
@@ -104,3 +104,4 @@ git push -u origin master
 **第二**  与第一点相同，这很重要！
 
 2016.5.29 by Jc
+

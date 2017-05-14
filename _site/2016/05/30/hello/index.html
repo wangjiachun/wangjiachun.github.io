@@ -249,15 +249,38 @@ github.com相当于一个服务器，我们可以直接在服务器上修改自�
 
 <p>每个账号在github上只能有一个个人主页，并且必须是username.github.io的名称，虽然以后可以绑定自己的域名，但目前来看，我还是先走一下常规流程比较好．</p>
 
-<p>本地调试环境需要jekyll，为了安装jekyll需要几个依赖项ruby RubyGems rvm nodejs
-之后安装＇gem install jekyll’，安装过程的压缩包许多都被墙了(ssl　error)，一开始不知道是因为墙的原因，网上各种搜无果，最后偶然试了一下重新输入命令，发现网站可以上了，于是开开心心的安装完成，之后打开本地网页的时候发生错误’cannot open such file, jekyll paginate’,然后用’gem list’查看列表发现没有这个东西，果断安装’gem install jekyll paginate’应该是jekyll模板的分页功能模块．现在输入＇jekyll serve’就可以开心地调试网页了，对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．</p>
+<p>本地调试环境需要jekyll，为了安装jekyll需要几个依赖项ruby(安装rvm的过程中自动安装ruby) <a href="https://rubygems.org/pages/download">RubyGems</a> <a href="https://www.rvm.io/">rvm</a> nodejs</p>
 
-<p>然后提交．
-git - -add
-git commit -m “commit description”
-git push -u origin master</p>
+<p>jekyll3需要ruby2.0以上才能支持，所以，rvm安装时要显式指定ruby的版本，否则安装一个1.9的就很坑爹．</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>curl -sSL https://get.rvm.io</td>
+      <td>bash -s stable　　–ruby</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>之后安装＇gem install jekyll’，安装过程的压缩包许多都被墙了(ssl　error)，一开始不知道是因为墙的原因，网上各种搜无果，最后偶然试了一下重新输入命令，发现网站可以上了，于是开开心心的安装完成，之后打开本地网页的时候发生错误’cannot open such file, jekyll paginate’,然后用’gem list’查看列表发现没有这个东西，果断安装’gem install jekyll paginate’应该是jekyll模板的分页功能模块．现在输入＇jekyll serve’就可以开心地调试网页了，对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．</p>
+
+<p>然后提交．</p>
+
+<p>git add –allrenshi</p>
+
+<p>git commit -m “commit description”</p>
+
+<p>git push -u origin master</p>
 
 <p>最后就进入了耗时反而最长的<strong>做图、写字</strong>阶段，也算是进入了<strong>写博客</strong>的正轨，类似 Hack Day 的方式去搭这个站的．</p>
+
+<p>##　参考github教程</p>
+
+<p><a href="http://rogerdudler.github.io/git-guide/index.zh.html">git - 简明指南</a>网站高大上</p>
+
+<p><a href="https://pages.github.com">git-pages</a></p>
+
+<p><a href="http://www.cnblogs.com/purediy/archive/2013/03/07/2948892.html">通过GitHub Pages建立个人站点</a></p>
 
 <h2 id="section-2">总结</h2>
 
@@ -269,11 +292,12 @@ git push -u origin master</p>
 
 <p>当别人问我你今天干了什么的时候，我哑口无言．</p>
 
-<p>这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少．</p>
+<p>这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．</p>
 
 <p><strong>第二</strong>  与第一点相同，这很重要！</p>
 
 <p>2016.5.29 by Jc</p>
+
 
 
                 <hr>
