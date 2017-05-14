@@ -83,8 +83,8 @@ featured-condition-size: 1              # A tag will be featured if the size of 
 # Friends
 friends: [
     {
-        title: "",
-        href: ""
+        title: "weibao",
+        href: "http://www.cnblogs.com/weibao/"
     },{
         title: "",
         href: ""
