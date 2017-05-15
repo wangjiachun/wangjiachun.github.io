@@ -73,7 +73,7 @@ curl -sSL https://get.rvm.io | bash -s stable　　--ruby
 
 然后提交．
 
-git add --allrenshi
+git add --all
 
 git commit -m "commit description"
 
