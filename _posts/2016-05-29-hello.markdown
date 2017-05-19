@@ -68,6 +68,7 @@ username是自己的github账号，projectname是要下载的项目名字．现�
 jekyll3需要ruby2.0以上才能支持，所以，rvm安装时要显式指定ruby的版本，否则安装一个1.9的就很坑爹．
 
 curl -sSL https://get.rvm.io 
+
 bash -s stable　　--ruby
 
 之后安装＇gem install jekyll'，安装过程的压缩包许多都被墙了(ssl　error)，一开始不知道是因为墙的原因，网上各种搜无果，最后偶然试了一下重新输入命令，发现网站可以上了，于是开开心心的安装完成，之后打开本地网页的时候发生错误'cannot open such file, jekyll paginate',然后用'gem list'查看列表发现没有这个东西，果断安装'gem install jekyll paginate'应该是jekyll模板的分页功能模块．现在输入＇jekyll serve'就可以开心地调试网页了，对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．
