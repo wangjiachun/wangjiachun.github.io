@@ -1,0 +1,26 @@
+---
+layout:     post
+title:      "Neural Networks"
+subtitle:   " \"神经网络入门学习随记\""
+date:       2017-05-19 21:00:00
+author:     "Jc"
+header-img: "img/post-bg-2017.jpg"
+catalog: true
+tags:
+    - 神经网络
+    - BP
+---
+
+> “Yeah It's on. ”
+
+
+## 前言
+
+
+
+<p id = "build"></p>
+---
+
+## 正文
+
+神经网络

@@ -7,6 +7,7 @@ description: "机器学习初级1段见习生 | 王嘉春，Web & Mobile Lover�
 keyword: "王嘉春, Jc, 博客, 个人网站, 互联网, 机器学习"
 url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
+timezone: "CN"
 
 
 
@@ -15,8 +16,8 @@ RSS: false
 weibo_username:     1009987724
 zhihu_username:     wang-jia-chun-26
 github_username:    wangjiachun
-#twitter_username:  huxpro
-facebook_username:  huxpro
+# witter_username:  huxpro
+# facebook_username:  huxpro
 # linkedin_username:  firstname-lastname-idxxxx
 
 
@@ -50,10 +51,10 @@ kramdown:
 # Disqus settings
 #disqus_username: _your_disqus_short_name_
 
-# Duoshuo settings
-duoshuo_username: huxblog
+# Duoshuo settings will be shutdown by 2017/06/01
+duoshuo_username: 
 # Share component is depend on Comment so we can NOT use share only.
-duoshuo_share: true                     # set to false if you want to use Comment without Sharing
+duoshuo_share: false                     # set to false if you want to use Comment without Sharing
 
 
 
