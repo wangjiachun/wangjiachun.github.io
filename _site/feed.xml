@@ -3,11 +3,11 @@
   <channel>
     <title>Jc Blog</title>
     <description>机器学习初级1段见习生 | 王嘉春，Web &amp; Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。</description>
-    <link>/</link>
-    <atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 05 Jun 2016 20:53:31 +0800</pubDate>
-    <lastBuildDate>Sun, 05 Jun 2016 20:53:31 +0800</lastBuildDate>
-    <generator>Jekyll v3.1.6</generator>
+    <link>http://localhost:4000/</link>
+    <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Sat, 20 May 2017 17:03:39 +0800</pubDate>
+    <lastBuildDate>Sat, 20 May 2017 17:03:39 +0800</lastBuildDate>
+    <generator>Jekyll v3.4.3</generator>
     
       <item>
         <title>Hello Github</title>
@@ -15,7 +15,7 @@
   &lt;p&gt;“Yeah It’s on. ”&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;h2 id=&quot;section&quot;&gt;前言&lt;/h2&gt;
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
 
 &lt;p&gt;Jc 的 Blog 就这么开通了。&lt;/p&gt;
 
@@ -28,7 +28,7 @@
 &lt;p id=&quot;build&quot;&gt;&lt;/p&gt;
 &lt;hr /&gt;
 
-&lt;h2 id=&quot;section-1&quot;&gt;正文&lt;/h2&gt;
+&lt;h2 id=&quot;正文&quot;&gt;正文&lt;/h2&gt;
 
 &lt;p&gt;接下来说说搭建这个博客的技术细节。&lt;/p&gt;
 
@@ -49,77 +49,202 @@
 
 &lt;hr /&gt;
 
-&lt;p&gt;配置的过程中也没遇到什么坑，基本就是 Git 的流程，相当顺手&lt;/p&gt;
+&lt;h3 id=&quot;配置git环境&quot;&gt;配置git环境&lt;/h3&gt;
 
-&lt;p&gt;大的 Jekyll 主题上直接 fork 了 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Hux&lt;/a&gt;   Blog（这个主题也相当有名，就不多赘述了。唯一的缺点大概就是没有标签支持，于是我给它补上了。）&lt;/p&gt;
+&lt;p&gt;下面介绍一下我自己的Ubuntu 16.04.2 LTS系统配置环境的流程：&lt;/p&gt;
 
-&lt;p&gt;首先是菜鸟第一次接触github，这对于英文渣和代码渣来说，都是一件及其f**k的事情．
-这里简单介绍一下github,它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以写代码的地方，找可以编译的地方，最后看了一些博客才知道git只是一个存放项目的reposities,所以在gh上写代码这个想法一开始就是错误的．&lt;/p&gt;
+&lt;p&gt;1、安装git命令&lt;/p&gt;
 
-&lt;p&gt;对于github上的一些按钮的功能网上介绍比较多，这里就不做介绍了．&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sudo apt-get install git&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;首先在github上注册一个账号，之后可以自己建一个demo仓库，或者fork别人的库练习．
-github.com相当于一个服务器，我们可以直接在服务器上修改自己的文件，但是这种方法终归不好，容易引发许多不可挽回的失误，尤其对于大型项目，一个＇rm -rf＇就可能删除一个公司．所以把自己的项目复制到本地进行修改，然后再提交到服务器上是比较稳妥的做法．&lt;/p&gt;
+&lt;p&gt;2、安装完成之后进行用户配置&lt;/p&gt;
 
-&lt;p&gt;git clone http://gtihub.com/username/projectname&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git config --global user.name &lt;span class=&quot;s2&quot;&gt;&quot;wangjiachun&quot;&lt;/span&gt;
+git config --global user.email &lt;span class=&quot;s2&quot;&gt;&quot;your_email@example.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;username是自己的github账号，projectname是要下载的项目名字．现在我们有了自己的本地文件，在提交之前，本地所做的任何修改都不会影响到服务器．&lt;/p&gt;
+&lt;p&gt;3、生成新的SSH密钥并将其添加到ssh代理&lt;/p&gt;
 
-&lt;p&gt;每个账号在github上只能有一个个人主页，并且必须是username.github.io的名称，虽然以后可以绑定自己的域名，但目前来看，我还是先走一下常规流程比较好．&lt;/p&gt;
+&lt;p&gt;参考: &lt;a href=&quot;https://help.github.com/articles/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent/#platform-linux&quot;&gt;Generating a new SSH key and adding it to the ssh-agent&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;本地调试环境需要jekyll，为了安装jekyll需要几个依赖项ruby(安装rvm的过程中自动安装ruby) &lt;a href=&quot;https://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt; &lt;a href=&quot;https://www.rvm.io/&quot;&gt;rvm&lt;/a&gt; nodejs&lt;/p&gt;
+&lt;p&gt;通过以下命令开始生成秘钥的流程，并通知Github的email&lt;/p&gt;
 
-&lt;p&gt;jekyll3需要ruby2.0以上才能支持，所以，rvm安装时要显式指定ruby的版本，否则安装一个1.9的就很坑爹．&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ssh-keygen -t rsa -b 4096 -C “your_email@example.com”&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;table&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;curl -sSL https://get.rvm.io&lt;/td&gt;
-      &lt;td&gt;bash -s stable　　–ruby&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;之后会有下面的提示设置秘钥存储目录和输入秘钥的密码&lt;/p&gt;
 
-&lt;p&gt;之后安装＇gem install jekyll’，安装过程的压缩包许多都被墙了(ssl　error)，一开始不知道是因为墙的原因，网上各种搜无果，最后偶然试了一下重新输入命令，发现网站可以上了，于是开开心心的安装完成，之后打开本地网页的时候发生错误’cannot open such file, jekyll paginate’,然后用’gem list’查看列表发现没有这个东西，果断安装’gem install jekyll paginate’应该是jekyll模板的分页功能模块．现在输入＇jekyll serve’就可以开心地调试网页了，对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．&lt;/p&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Enter file &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;which the key is &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/you/.ssh/id_rsa&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Hit enter]
+Key has comment &lt;span class=&quot;s1&quot;&gt;'/home/wangjc/.ssh/id_rsa'&lt;/span&gt;
+Enter new passphrase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Type new passphrase]
+Enter same passphrase again: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;One more &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;luck]
+Your identification has been saved with the new passphrase.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;然后提交．&lt;/p&gt;
+&lt;p&gt;4、把生成的SSH key的公钥加入到Github账户中&lt;/p&gt;
 
-&lt;p&gt;git add –allrenshi&lt;/p&gt;
+&lt;p&gt;公钥和私钥存储在同一目录下，默认是~/.ssh/id_rsa.pub。
+复制该文件的全部内容到Github账户下的SSH and GPG keys的New SSH key,并同时添加秘钥所在主机的描述&lt;/p&gt;
 
-&lt;p&gt;git commit -m “commit description”&lt;/p&gt;
+&lt;p&gt;参考github官方文档的教程&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.github.com/articles/reviewing-your-ssh-keys/&quot;&gt;Reviewing your SSH keys&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/#platform-linux&quot;&gt;复制公钥到Github账户下&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;git push -u origin master&lt;/p&gt;
+&lt;p&gt;5、从远程服务器上拷贝库&lt;/p&gt;
 
-&lt;p&gt;最后就进入了耗时反而最长的&lt;strong&gt;做图、写字&lt;/strong&gt;阶段，也算是进入了&lt;strong&gt;写博客&lt;/strong&gt;的正轨，类似 Hack Day 的方式去搭这个站的．&lt;/p&gt;
+&lt;p&gt;选择需要拷贝的库并打开下图所示的复制框，复制文本框内的内容为远程目录地址&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/img/in-post/post-git-deploy/gitssh.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后就可以把远程库内的文件下载到本地，在终端输入&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git clone git@github.com:username/username.github.io&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果配置了SSH key的密钥，这里需要验证输入。到此就完成了基本git环境的建立。下面介绍如何对本地库进行操作并同步到服务器上。&lt;/p&gt;
+
+&lt;h3 id=&quot;同步本地代码库&quot;&gt;同步本地代码库&lt;/h3&gt;
+
+&lt;p&gt;1、本地编写或修改代码&lt;/p&gt;
+
+&lt;p&gt;2、提交代码到缓存区，如果只修改了一个文件，就只需要提交这个文件名字，如果修改了多个文件，一个一个地提交会比较慢，
+就可以直接提交所有文件，add命令把待提交的文件暂存到本地缓存中等待提交&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git add &amp;lt;filename&amp;gt; &lt;span class=&quot;c&quot;&gt;# 提交一个文件&lt;/span&gt;
+git add --all &lt;span class=&quot;c&quot;&gt;# 提交所有文件&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;3、文件add到缓存之后并没有与远程服务器建立连接，使用commit命令来提交最后一次add的结果&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;代码提交信息&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;4、正式把提交的代码同步到远程服务器上&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里可以把 master 换成你想要推送的任何分支。
+至此完成了基本的版本同步过程。
+&lt;a href=&quot;http://rogerdudler.github.io/git-guide/index.zh.html&quot;&gt;git - 简明指南&lt;/a&gt;详细清晰的介绍了本地库和远程库连接的工作原理。
+了解了代码的同步和提交过程，下面就是建立本地编译环境&lt;/p&gt;
+
+&lt;h3 id=&quot;建立本地编译调试环境&quot;&gt;建立本地编译调试环境&lt;/h3&gt;
+
+&lt;p&gt;配置好git环境,并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
+或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
+编译环境。建立了本地环境之后，我们可以在本地浏览器预览文章被发布之后的样子，即快速又方便。&lt;/p&gt;
+
+&lt;p&gt;为了建立一个良好稳定的本地编译环境，需要安装nodejs, rvm, ruby,  gem, github-pages, jekyll,看到这么多需要安装的包一开始是有点头大的，
+幸好我已经踩过了一些坑，下面我一步一步介绍如何安装。实际上，这些包是有依赖关系的我们的终极目的是为了安装&lt;a href=&quot;http://jekyllcn.com/&quot;&gt;jekyll&lt;/a&gt;，jekyll是是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过一个转换器（如 Markdown）和我们的 Liquid 渲染器转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。听不懂没关系，只需要知道我们用它来把原始的博客文本从markdown形式转换到到浏览器中就可以了。
+jekyll是基于&lt;a href=&quot;https://www.ruby-lang.org/zh_cn/&quot;&gt;ruby&lt;/a&gt;的，而rvm是ruby的版本管理器，&lt;a href=&quot;https://rubygems.org/?locale=zh-CN&quot;&gt;gem&lt;/a&gt;是Ruby 社区的 Gem 托管服务,可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
+就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -sSL https://get.rvm.io | bash -s stable --ruby&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
+对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
+&lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47748211&quot;&gt;linux下安装ruby版本管理器RVM&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;有了rvm之后就可以轻松的安装ruby,这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
+ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
+建议只安装一个版本的ruby即可&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm install 2.3
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm list
+rvm rubies
+
+&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ruby-2.3.3 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; x86_64 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;c&quot;&gt;# =&amp;gt; - current&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;# =* - current &amp;amp;&amp;amp; default&lt;/span&gt;
+&lt;span class=&quot;c&quot;&gt;#  * - default&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm use 2.3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;之后安装gem,为了防止网络问题，还是直接从官网下载安装包，链接在这里&lt;a href=&quot;https://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt;,下载TGZ文件到本地目录并解压安装。
+或者直接本地下载。安装好gem后更新一下版本，&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;wget https://rubygems.org/rubygems/rubygems-2.6.12.tgz
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;tar zxvf rubygems-2.6.12.tgz
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;rubygems-2.6.12
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;ruby setup.rb
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem update --system&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;安装好gem之后可以直接安装jekyll，这里先安装github-pages，因为jekyll的页面信息依赖于github-pages&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install github-pages
+&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;安装jekyll的过程，如果出错，可能是因为网络原因，建议使用&lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47760539&quot;&gt;淘宝的源&lt;/a&gt;来下载,感谢大熊猫侯佩的贡献。&lt;/p&gt;
+
+&lt;p&gt;而nodejs是相对独立的安装包，通过npm来安装&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;npm install node&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;至此就完成了所有包的安装。使用-v,检查一下版本安装是否正确吧。可以参考一下我的安装
+&lt;img src=&quot;/img/in-post/post-git-deploy/git-blog-tools.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;wangjiachun.github.io
+jekyll serve --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;使用sublime编辑文章&quot;&gt;使用sublime编辑文章&lt;/h2&gt;
+
+&lt;p&gt;下面介绍的是如何在本地编辑文章，更方便的编辑博客。看了上面这么多建站流程，应该会有点累了，如果不想继续阅读，这部分可以留待以后阅读。&lt;/p&gt;
+
+&lt;h3 id=&quot;在ubuntu上安装sublime&quot;&gt;在ubuntu上安装sublime&lt;/h3&gt;
+
+&lt;p&gt;sublime是一款具有代码高亮、语法提示、自动完成且反应快速的编辑器软件。ubuntu上安装sublime的过程比较简单。&lt;/p&gt;
+
+&lt;p&gt;到&lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text官方网站&lt;/a&gt;上下载64位的安装包&lt;a href=&quot;http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb&quot;&gt;sublime-text_build-3059_amd64.deb&lt;/a&gt;，下载后双击安装即可。安装好之后，通过命令subl即可打开程序，此时已经可以编写代码了。&lt;/p&gt;
+
+&lt;h3 id=&quot;在windows上远程连接服务器的sublime&quot;&gt;在windows上远程连接服务器的sublime&lt;/h3&gt;
+
+&lt;p&gt;我平时比较喜欢用windows编辑文件，所以给有同样习惯的coders分享一下如何在windows下用sublime远程编辑服务器端的文件的链接。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/qwe1992314/article/details/52232426&quot;&gt;使用 sublime text3 连接sftp&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://blog.chinaunix.net/uid-30254565-id-5611263.html&quot;&gt;sublime text 3 取消自动检查更新的解决办法以及注册的方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;关于本篇博客&quot;&gt;关于本篇博客&lt;/h2&gt;
+
+&lt;p&gt;大的 Jekyll 主题上直接 fork 了 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Hux&lt;/a&gt;  Blog（这个主题也相当有名，就不多赘述了。）&lt;/p&gt;
+
+&lt;p&gt;在整个搭建博客的过程磕磕绊绊，还把ubuntu桌面弄没了一次（ sudo apt-get upgrade 命令还是少用为妙）
+这里简单介绍一下github,它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以编译代码的地方无果，
+最后看了一些博客才知道git只是一个存放项目的reposities.&lt;/p&gt;
+
+&lt;p&gt;对于github上的各种具体功能网上介绍比较多，这里就不做介绍了．参考某知乎er的介绍&lt;a href=&quot;https://www.zhihu.com/question/20070065&quot;&gt;怎样使用 GitHub？&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．&lt;/p&gt;
 
 &lt;p&gt;##　参考github教程&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;http://rogerdudler.github.io/git-guide/index.zh.html&quot;&gt;git - 简明指南&lt;/a&gt;网站高大上&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://pages.github.com&quot;&gt;git-pages&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.cnblogs.com/purediy/archive/2013/03/07/2948892.html&quot;&gt;通过GitHub Pages建立个人站点&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://pages.github.com&quot;&gt;git-pages&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;http://www.cnblogs.com/purediy/archive/2013/03/07/2948892.html&quot;&gt;通过GitHub Pages建立个人站点&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;section-2&quot;&gt;总结&lt;/h2&gt;
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
 
 &lt;p&gt;对于这次艰难的建站之旅来说，主要是有这么两点收获．&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;第一&lt;/strong&gt;  做项目也好，写代码也好，任何事做之前需要明确目标，知道自己在干什么．&lt;/p&gt;
 
-&lt;p&gt;经常有这种事发生：计划今天去北京大学看知性妹子，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．&lt;/p&gt;
+&lt;p&gt;经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．&lt;/p&gt;
 
 &lt;p&gt;当别人问我你今天干了什么的时候，我哑口无言．&lt;/p&gt;
 
 &lt;p&gt;这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;第二&lt;/strong&gt;  与第一点相同，这很重要！&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;第二&lt;/strong&gt;  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
+发生了break，就想着怎么修复他们。更快速的方法是，直接卸载掉，然后重新安装。&lt;/p&gt;
 
-&lt;p&gt;2016.5.29 by Jc&lt;/p&gt;
+&lt;p&gt;2016.5.29 by Jc
+2017.5.20 updated&lt;/p&gt;
 
 </description>
         <pubDate>Mon, 30 May 2016 04:00:00 +0800</pubDate>
-        <link>/2016/05/30/hello/</link>
-        <guid isPermaLink="true">/2016/05/30/hello/</guid>
+        <link>http://localhost:4000/2016/05/30/hello/</link>
+        <guid isPermaLink="true">http://localhost:4000/2016/05/30/hello/</guid>
         
         <category>生活</category>
         
