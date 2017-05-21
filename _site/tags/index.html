@@ -48,6 +48,40 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+
+    <!-- mathjax config similar to math.stackexchange -->
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+        });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+    <script type="text/javascript"
+       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- mathjax config end -->
 </head>
 
 
@@ -172,6 +206,10 @@
 				
 				<a href="#生活" title="生活" rel="1">生活</a>
 				
+				<a href="#Github" title="Github" rel="1">Github</a>
+				
+				<a href="#Jekyll" title="Jekyll" rel="1">Jekyll</a>
+				
 				<a href="#神经网络" title="神经网络" rel="1">神经网络</a>
 				
 				<a href="#BP" title="BP" rel="1">BP</a>
@@ -189,6 +227,58 @@
 			<div class="one-tag-list">
 			  	<span class="fa fa-tag listing-seperator" id="生活">
                     <span class="tag-text">生活</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2016-05-29">2016-05-29</time>
+				  <a href="/2016/05/29/hello/" title="Hello Github">Hello Github</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2016/05/29/hello/">
+				        <h2 class="post-title">
+                            Hello Github
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				             "Hello World, Hello Blog"
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2016-05-29</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Github">
+                    <span class="tag-text">Github</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2016-05-29">2016-05-29</time>
+				  <a href="/2016/05/29/hello/" title="Hello Github">Hello Github</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2016/05/29/hello/">
+				        <h2 class="post-title">
+                            Hello Github
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				             "Hello World, Hello Blog"
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2016-05-29</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Jekyll">
+                    <span class="tag-text">Jekyll</span>
                 </span>
 				
 				  <!-- <li class="listing-item">

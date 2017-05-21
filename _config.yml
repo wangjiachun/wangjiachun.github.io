@@ -7,7 +7,7 @@ description: "机器学习初级1段见习生 | 王嘉春，Web & Mobile Lover�
 keyword: "王嘉春, Jc, 博客, 个人网站, 互联网, 机器学习"
 url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
-timezone: "CN"
+timezone: CN
 
 
 
@@ -29,6 +29,7 @@ permalink: pretty
 paginate: 10
 exclude: ["less","node_modules","Gruntfile.js","package.json","README.md","README.zh.md"]
 anchorjs: true                          # if you want to customize anchor. check out line:181 of `post.html`
+
 
 
 

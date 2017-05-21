@@ -48,6 +48,40 @@
 
     <!-- ga & ba script hoook -->
     <script></script>
+
+    <!-- mathjax config similar to math.stackexchange -->
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+        });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+    <script type="text/javascript"
+       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- mathjax config end -->
 </head>
 
 
@@ -196,13 +230,15 @@
 
 前言
 
+最近开始接触神经网络，遂记下自己学习过程中遇到的问题和心得。
+简单来说：人工神经网络是一种旨在模仿人脑结构及其功能的信息处理系统。
+人工神经网络的整个发展过程，大致可以分为5个阶段：
 
-
-
-正文
-
-神经网络
-
+  形成时期，M-P模型
+  低谷时期，当时神经网络只能训练单层
+  复兴时期，Hopfield模型
+  发展时期，BP算法的提出导致了DNN的发展
+  繁...
         </div>
     </a>
     <p class="post-meta">
@@ -269,6 +305,10 @@ Jc 的 Blog 就这么开通了。
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+                        
+                            
+                        
+                            
                         
                             
                         
