@@ -125,7 +125,8 @@ git add --all # 提交所有文件
 git commit -m "代码提交信息"
 {% endhighlight %}
 
-4、正式把提交的代码同步到远程服务器上
+4、以上都只是在本地的离线操作，相当于准备好了修改后的代码，只等一个命令下达就可以同步到远程服务器上，
+这个命令是长这样婶的
 
 {% highlight shell %}
 git push origin master
