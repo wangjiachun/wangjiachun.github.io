@@ -5,8 +5,8 @@
     <description>机器学习初级1段见习生 | 王嘉春，Web &amp; Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sun, 21 May 2017 06:46:35 +0000</pubDate>
-    <lastBuildDate>Sun, 21 May 2017 06:46:35 +0000</lastBuildDate>
+    <pubDate>Mon, 22 May 2017 04:16:27 +0000</pubDate>
+    <lastBuildDate>Mon, 22 May 2017 04:16:27 +0000</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -17,7 +17,7 @@
 
 &lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
 
-&lt;p&gt;最近开始接触神经网络，遂记下自己学习过程中遇到的问题和心得。
+&lt;p&gt;  最近开始接触神经网络，遂记下自己学习过程中遇到的问题和心得。
 简单来说：人工神经网络是一种旨在模仿人脑结构及其功能的信息处理系统。
 人工神经网络的整个发展过程，大致可以分为5个阶段：&lt;/p&gt;
 &lt;ul&gt;
@@ -37,7 +37,7 @@
 
 &lt;h3 id=&quot;初识神经网络&quot;&gt;初识神经网络&lt;/h3&gt;
 
-&lt;p&gt;神经网络，顾名思义，来自于人的神经系统，其基本单位是神经元，神经元的作用是传递信息和处理信息，神经网络
+&lt;p&gt;  神经网络，顾名思义，来自于人的神经系统，其基本单位是神经元，神经元的作用是传递信息和处理信息，神经网络
 正是利用这个特点完成分类和回归的功能。
 传递信息，类似于人通过眼睛，鼻子，耳朵等感受到外界的刺激，最终被送到大脑。
 处理信息，类似于人看到一只动物，能够判断这是猫还是狗。
@@ -47,7 +47,7 @@
 
 &lt;p&gt;&lt;img src=&quot;/img/in-post/post-NN/post-single-neuron.png&quot; alt=&quot;Single Neuron Images&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;神经元的输入是自变量，通常可以表示为向量的形式，向量中每个元素x_{i}表示特征的某一维度，通常还会增加一项偏置项+1，
+&lt;p&gt;  神经元的输入是自变量，通常可以表示为向量的形式，向量中每个元素x_{i}表示特征的某一维度，通常还会增加一项偏置项+1，
 每个特征的线性加权和构成这个神经元的总输入，同时还需要一个非线性激活函数，以sigmoid函数 
 $f\left ( z \right )=1/(1+exp(-z))$ 
 为例，那么神经元的输出就是&lt;/p&gt;
@@ -57,8 +57,9 @@ $f\left ( z \right )=1/(1+exp(-z))$
   &amp; h_{W,b} \left ( x \right ) = f \left ( W^{T}x \right ) = f ( \sum_{i=1}^{3} W_{i}x_{i} + b )
 \end{align*} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;sigmoid函数有非常好的性质：非线性，连续可导，一阶导数
-$f^{‘}\left ( z \right )=f\left ( z \right )\left ( 1-f\left ( z \right ) \right )$，一阶导数在x=0处取得最大值。&lt;/p&gt;
+&lt;p&gt;之所以采用sigmoid函数，是因为它有非常好的性质：非线性，连续可导，一阶导数
+${f}’\left ( z \right )=f\left ( z \right )\left ( 1-f\left ( z \right ) \right )$，一阶导数在x=0处取得最大值。
+其他函数还有双曲正切函数。&lt;/p&gt;
 
 </description>
         <pubDate>Fri, 19 May 2017 21:00:00 +0000</pubDate>
@@ -144,7 +145,7 @@ Your identification has been saved with the new passphrase.&lt;/code&gt;&lt;/pre
 &lt;p&gt;4、把生成的SSH key的公钥加入到Github账户中&lt;/p&gt;
 
 &lt;p&gt;公钥和私钥存储在同一目录下，默认是~/.ssh/id_rsa.pub。
-复制该文件的全部内容到Github账户下的SSH and GPG keys的New SSH key,并同时添加秘钥所在主机的描述&lt;/p&gt;
+复制该文件的全部内容到Github账户下的SSH and GPG keys的New SSH key，并同时添加秘钥所在主机的描述&lt;/p&gt;
 
 &lt;p&gt;参考github官方文档的教程&lt;/p&gt;
 &lt;ul&gt;
@@ -190,22 +191,22 @@ git add --all &lt;span class=&quot;c&quot;&gt;# 提交所有文件&lt;/span&gt;&
 
 &lt;h3 id=&quot;建立本地编译调试环境&quot;&gt;建立本地编译调试环境&lt;/h3&gt;
 
-&lt;p&gt;配置好git环境,并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
+&lt;p&gt;  配置好git环境，并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
 或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
 编译环境。建立了本地环境之后，我们可以在本地浏览器预览文章被发布之后的样子，即快速又方便。&lt;/p&gt;
 
-&lt;p&gt;为了建立一个良好稳定的本地编译环境，需要安装nodejs, rvm, ruby,  gem, github-pages, jekyll,看到这么多需要安装的包一开始是有点头大的，
+&lt;p&gt;  为了建立一个良好稳定的本地编译环境，需要安装nodejs， rvm， ruby，  gem， github-pages， jekyll，看到这么多需要安装的包一开始是有点头大的，
 幸好我已经踩过了一些坑，下面我一步一步介绍如何安装。实际上，这些包是有依赖关系的我们的终极目的是为了安装&lt;a href=&quot;http://jekyllcn.com/&quot;&gt;jekyll&lt;/a&gt;，jekyll是是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过一个转换器（如 Markdown）和我们的 Liquid 渲染器转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。听不懂没关系，只需要知道我们用它来把原始的博客文本从markdown形式转换到到浏览器中就可以了。
-jekyll是基于&lt;a href=&quot;https://www.ruby-lang.org/zh_cn/&quot;&gt;ruby&lt;/a&gt;的，而rvm是ruby的版本管理器，&lt;a href=&quot;https://rubygems.org/?locale=zh-CN&quot;&gt;gem&lt;/a&gt;是Ruby 社区的 Gem 托管服务,可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
+jekyll是基于&lt;a href=&quot;https://www.ruby-lang.org/zh_cn/&quot;&gt;ruby&lt;/a&gt;的，而rvm是ruby的版本管理器，&lt;a href=&quot;https://rubygems.org/?locale=zh-CN&quot;&gt;gem&lt;/a&gt;是Ruby 社区的 Gem 托管服务，可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
 就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -sSL https://get.rvm.io | bash -s stable --ruby&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
+&lt;p&gt;  由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
 对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
 &lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47748211&quot;&gt;linux下安装ruby版本管理器RVM&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;有了rvm之后就可以轻松的安装ruby,这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
+&lt;p&gt;  有了rvm之后就可以轻松的安装ruby，这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
 ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
 建议只安装一个版本的ruby即可&lt;/p&gt;
 
@@ -220,7 +221,7 @@ rvm rubies
 &lt;span class=&quot;c&quot;&gt;#  * - default&lt;/span&gt;
 &lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm use 2.3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;之后安装gem,为了防止网络问题，还是直接从官网下载安装包，链接在这里&lt;a href=&quot;https://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt;,下载TGZ文件到本地目录并解压安装。
+&lt;p&gt;  之后安装gem，为了防止网络问题，还是直接从官网下载安装包，链接在这里&lt;a href=&quot;https://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt;，下载TGZ文件到本地目录并解压安装。
 或者直接本地下载。安装好gem后更新一下版本，&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
@@ -235,13 +236,13 @@ rvm rubies
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install github-pages
 &lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;安装jekyll的过程，如果出错，可能是因为网络原因，建议使用&lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47760539&quot;&gt;淘宝的源&lt;/a&gt;来下载,感谢大熊猫侯佩的贡献。&lt;/p&gt;
+&lt;p&gt;安装jekyll的过程，如果出错，可能是因为网络原因，建议使用&lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47760539&quot;&gt;淘宝的源&lt;/a&gt;来下载，感谢大熊猫侯佩的贡献。&lt;/p&gt;
 
 &lt;p&gt;而nodejs是相对独立的安装包，通过npm来安装&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;npm install node&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;至此就完成了所有包的安装。使用-v,检查一下版本安装是否正确吧。可以参考一下我的安装
+&lt;p&gt;至此就完成了所有包的安装。使用-v，检查一下版本安装是否正确吧。可以参考一下我的安装
 &lt;img src=&quot;/img/in-post/post-git-deploy/git-blog-tools.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了&lt;/p&gt;
@@ -255,13 +256,13 @@ jekyll serve --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h3 id=&quot;在ubuntu上安装sublime&quot;&gt;在ubuntu上安装sublime&lt;/h3&gt;
 
-&lt;p&gt;sublime是一款具有代码高亮、语法提示、自动完成且反应快速的编辑器软件。ubuntu上安装sublime的过程比较简单。&lt;/p&gt;
+&lt;p&gt;  sublime是一款具有代码高亮、语法提示、自动完成且反应快速的编辑器软件。ubuntu上安装sublime的过程比较简单。&lt;/p&gt;
 
-&lt;p&gt;到&lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text官方网站&lt;/a&gt;上下载64位的安装包&lt;a href=&quot;http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb&quot;&gt;sublime-text_build-3059_amd64.deb&lt;/a&gt;，下载后双击安装即可。安装好之后，通过命令subl即可打开程序，此时已经可以编写代码了。&lt;/p&gt;
+&lt;p&gt;  到&lt;a href=&quot;http://www.sublimetext.com/3&quot;&gt;Sublime Text官方网站&lt;/a&gt;上下载64位的安装包&lt;a href=&quot;http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb&quot;&gt;sublime-text_build-3059_amd64.deb&lt;/a&gt;，下载后双击安装即可。安装好之后，通过命令subl即可打开程序，此时已经可以编写代码了。&lt;/p&gt;
 
 &lt;h3 id=&quot;在windows上远程连接服务器的sublime&quot;&gt;在windows上远程连接服务器的sublime&lt;/h3&gt;
 
-&lt;p&gt;我平时比较喜欢用windows编辑文件，所以给有同样习惯的coders分享一下如何在windows下用sublime远程编辑服务器端的文件的链接。&lt;/p&gt;
+&lt;p&gt;  我平时比较喜欢用windows编辑文件，所以给有同样习惯的coders分享一下如何在windows下用sublime远程编辑服务器端的文件的链接。&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://blog.csdn.net/qwe1992314/article/details/52232426&quot;&gt;使用 sublime text3 连接sftp&lt;/a&gt;&lt;/li&gt;
@@ -270,15 +271,15 @@ jekyll serve --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h2 id=&quot;关于本篇博客&quot;&gt;关于本篇博客&lt;/h2&gt;
 
-&lt;p&gt;大的 Jekyll 主题上直接 fork 了 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Hux&lt;/a&gt;  Blog（这个主题也相当有名，就不多赘述了。）&lt;/p&gt;
+&lt;p&gt;  大的 Jekyll 主题上直接 fork 了 &lt;a href=&quot;https://github.com/Huxpro/huxpro.github.io&quot;&gt;Hux&lt;/a&gt;  Blog（这个主题也相当有名，就不多赘述了。）&lt;/p&gt;
 
-&lt;p&gt;在整个搭建博客的过程磕磕绊绊，还把ubuntu桌面弄没了一次（ sudo apt-get upgrade 命令还是少用为妙）
-这里简单介绍一下github,它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以编译代码的地方无果，
+&lt;p&gt;  在整个搭建博客的过程磕磕绊绊，还把ubuntu桌面弄没了一次（ sudo apt-get upgrade 命令还是少用为妙）
+这里简单介绍一下github，它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以编译代码的地方无果，
 最后看了一些博客才知道git只是一个存放项目的reposities.&lt;/p&gt;
 
-&lt;p&gt;对于github上的各种具体功能网上介绍比较多，这里就不做介绍了．参考某知乎er的介绍&lt;a href=&quot;https://www.zhihu.com/question/20070065&quot;&gt;怎样使用 GitHub？&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;  对于github上的各种具体功能网上介绍比较多，这里就不做介绍了．参考某知乎er的介绍&lt;a href=&quot;https://www.zhihu.com/question/20070065&quot;&gt;怎样使用 GitHub？&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．&lt;/p&gt;
+&lt;p&gt;  对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．&lt;/p&gt;
 
 &lt;p&gt;##　参考github教程&lt;/p&gt;
 
@@ -293,13 +294,15 @@ jekyll serve --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;&lt;strong&gt;第一&lt;/strong&gt;  做项目也好，写代码也好，任何事做之前需要明确目标，知道自己在干什么．&lt;/p&gt;
 
-&lt;p&gt;经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．&lt;/p&gt;
+&lt;p&gt;  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．&lt;/p&gt;
 
 &lt;p&gt;当别人问我你今天干了什么的时候，我哑口无言．&lt;/p&gt;
 
 &lt;p&gt;这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;第二&lt;/strong&gt;  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
+&lt;p&gt;&lt;strong&gt;第二&lt;/strong&gt;  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。&lt;/p&gt;
+
+&lt;p&gt;  比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
 发生了break，就想着怎么修复他们。更快速的方法是，直接卸载掉，然后重新安装。&lt;/p&gt;
 
 &lt;p&gt;2016.5.29 by Jc&lt;/p&gt;

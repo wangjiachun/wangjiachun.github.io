@@ -214,7 +214,7 @@
                     <h1>Hello Github</h1>
                     
                     
-                    <h2 class="subheading"> "Hello World, Hello Blog"</h2>
+                    <h2 class="subheading"> "Hello World， Hello Blog"</h2>
                     
                     <span class="meta">Posted by Jc on May 29, 2016</span>
                 </div>
@@ -304,7 +304,7 @@ Your identification has been saved with the new passphrase.</code></pre></figure
 <p>4、把生成的SSH key的公钥加入到Github账户中</p>
 
 <p>公钥和私钥存储在同一目录下，默认是~/.ssh/id_rsa.pub。
-复制该文件的全部内容到Github账户下的SSH and GPG keys的New SSH key,并同时添加秘钥所在主机的描述</p>
+复制该文件的全部内容到Github账户下的SSH and GPG keys的New SSH key，并同时添加秘钥所在主机的描述</p>
 
 <p>参考github官方文档的教程</p>
 <ul>
@@ -350,22 +350,22 @@ git add --all <span class="c"># 提交所有文件</span></code></pre></figure>
 
 <h3 id="建立本地编译调试环境">建立本地编译调试环境</h3>
 
-<p>配置好git环境,并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
+<p>  配置好git环境，并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
 或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
 编译环境。建立了本地环境之后，我们可以在本地浏览器预览文章被发布之后的样子，即快速又方便。</p>
 
-<p>为了建立一个良好稳定的本地编译环境，需要安装nodejs, rvm, ruby,  gem, github-pages, jekyll,看到这么多需要安装的包一开始是有点头大的，
+<p>  为了建立一个良好稳定的本地编译环境，需要安装nodejs， rvm， ruby，  gem， github-pages， jekyll，看到这么多需要安装的包一开始是有点头大的，
 幸好我已经踩过了一些坑，下面我一步一步介绍如何安装。实际上，这些包是有依赖关系的我们的终极目的是为了安装<a href="http://jekyllcn.com/">jekyll</a>，jekyll是是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过一个转换器（如 Markdown）和我们的 Liquid 渲染器转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。听不懂没关系，只需要知道我们用它来把原始的博客文本从markdown形式转换到到浏览器中就可以了。
-jekyll是基于<a href="https://www.ruby-lang.org/zh_cn/">ruby</a>的，而rvm是ruby的版本管理器，<a href="https://rubygems.org/?locale=zh-CN">gem</a>是Ruby 社区的 Gem 托管服务,可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
+jekyll是基于<a href="https://www.ruby-lang.org/zh_cn/">ruby</a>的，而rvm是ruby的版本管理器，<a href="https://rubygems.org/?locale=zh-CN">gem</a>是Ruby 社区的 Gem 托管服务，可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
 就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">curl -sSL https://get.rvm.io | bash -s stable --ruby</code></pre></figure>
 
-<p>由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
+<p>  由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
 对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
 <a href="http://blog.csdn.net/mydo/article/details/47748211">linux下安装ruby版本管理器RVM</a></p>
 
-<p>有了rvm之后就可以轻松的安装ruby,这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
+<p>  有了rvm之后就可以轻松的安装ruby，这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
 ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
 建议只安装一个版本的ruby即可</p>
 
@@ -380,7 +380,7 @@ rvm rubies
 <span class="c">#  * - default</span>
 <span class="gp">wangjc@ubuntu:$ </span>rvm use 2.3</code></pre></figure>
 
-<p>之后安装gem,为了防止网络问题，还是直接从官网下载安装包，链接在这里<a href="https://rubygems.org/pages/download">RubyGems</a>,下载TGZ文件到本地目录并解压安装。
+<p>  之后安装gem，为了防止网络问题，还是直接从官网下载安装包，链接在这里<a href="https://rubygems.org/pages/download">RubyGems</a>，下载TGZ文件到本地目录并解压安装。
 或者直接本地下载。安装好gem后更新一下版本，</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">wangjc@ubuntu:$ </span><span class="nb">cd</span> ~/Downloads
@@ -395,13 +395,13 @@ rvm rubies
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">wangjc@ubuntu:$ </span>gem install github-pages
 <span class="gp">wangjc@ubuntu:$ </span>gem install jekyll</code></pre></figure>
 
-<p>安装jekyll的过程，如果出错，可能是因为网络原因，建议使用<a href="http://blog.csdn.net/mydo/article/details/47760539">淘宝的源</a>来下载,感谢大熊猫侯佩的贡献。</p>
+<p>安装jekyll的过程，如果出错，可能是因为网络原因，建议使用<a href="http://blog.csdn.net/mydo/article/details/47760539">淘宝的源</a>来下载，感谢大熊猫侯佩的贡献。</p>
 
 <p>而nodejs是相对独立的安装包，通过npm来安装</p>
 
 <figure class="highlight"><pre><code class="language-shell" data-lang="shell">npm install node</code></pre></figure>
 
-<p>至此就完成了所有包的安装。使用-v,检查一下版本安装是否正确吧。可以参考一下我的安装
+<p>至此就完成了所有包的安装。使用-v，检查一下版本安装是否正确吧。可以参考一下我的安装
 <img src="/img/in-post/post-git-deploy/git-blog-tools.png" alt="" /></p>
 
 <p>本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了</p>
@@ -415,13 +415,13 @@ jekyll serve --watch</code></pre></figure>
 
 <h3 id="在ubuntu上安装sublime">在ubuntu上安装sublime</h3>
 
-<p>sublime是一款具有代码高亮、语法提示、自动完成且反应快速的编辑器软件。ubuntu上安装sublime的过程比较简单。</p>
+<p>  sublime是一款具有代码高亮、语法提示、自动完成且反应快速的编辑器软件。ubuntu上安装sublime的过程比较简单。</p>
 
-<p>到<a href="http://www.sublimetext.com/3">Sublime Text官方网站</a>上下载64位的安装包<a href="http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb">sublime-text_build-3059_amd64.deb</a>，下载后双击安装即可。安装好之后，通过命令subl即可打开程序，此时已经可以编写代码了。</p>
+<p>  到<a href="http://www.sublimetext.com/3">Sublime Text官方网站</a>上下载64位的安装包<a href="http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb">sublime-text_build-3059_amd64.deb</a>，下载后双击安装即可。安装好之后，通过命令subl即可打开程序，此时已经可以编写代码了。</p>
 
 <h3 id="在windows上远程连接服务器的sublime">在windows上远程连接服务器的sublime</h3>
 
-<p>我平时比较喜欢用windows编辑文件，所以给有同样习惯的coders分享一下如何在windows下用sublime远程编辑服务器端的文件的链接。</p>
+<p>  我平时比较喜欢用windows编辑文件，所以给有同样习惯的coders分享一下如何在windows下用sublime远程编辑服务器端的文件的链接。</p>
 
 <ul>
   <li><a href="http://blog.csdn.net/qwe1992314/article/details/52232426">使用 sublime text3 连接sftp</a></li>
@@ -430,15 +430,15 @@ jekyll serve --watch</code></pre></figure>
 
 <h2 id="关于本篇博客">关于本篇博客</h2>
 
-<p>大的 Jekyll 主题上直接 fork 了 <a href="https://github.com/Huxpro/huxpro.github.io">Hux</a>  Blog（这个主题也相当有名，就不多赘述了。）</p>
+<p>  大的 Jekyll 主题上直接 fork 了 <a href="https://github.com/Huxpro/huxpro.github.io">Hux</a>  Blog（这个主题也相当有名，就不多赘述了。）</p>
 
-<p>在整个搭建博客的过程磕磕绊绊，还把ubuntu桌面弄没了一次（ sudo apt-get upgrade 命令还是少用为妙）
-这里简单介绍一下github,它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以编译代码的地方无果，
+<p>  在整个搭建博客的过程磕磕绊绊，还把ubuntu桌面弄没了一次（ sudo apt-get upgrade 命令还是少用为妙）
+这里简单介绍一下github，它是一个免费的开源项目托管工具，而不是一个编译器，我刚开始使用他的时候到处找可以编译代码的地方无果，
 最后看了一些博客才知道git只是一个存放项目的reposities.</p>
 
-<p>对于github上的各种具体功能网上介绍比较多，这里就不做介绍了．参考某知乎er的介绍<a href="https://www.zhihu.com/question/20070065">怎样使用 GitHub？</a></p>
+<p>  对于github上的各种具体功能网上介绍比较多，这里就不做介绍了．参考某知乎er的介绍<a href="https://www.zhihu.com/question/20070065">怎样使用 GitHub？</a></p>
 
-<p>对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．</p>
+<p>  对于算法工程师来说，这个模板相对来说是比较省时省力的，个人博客可以做的好看又不用费心看一些html和css的东西．</p>
 
 <p>##　参考github教程</p>
 
@@ -453,13 +453,15 @@ jekyll serve --watch</code></pre></figure>
 
 <p><strong>第一</strong>  做项目也好，写代码也好，任何事做之前需要明确目标，知道自己在干什么．</p>
 
-<p>经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．</p>
+<p>  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．</p>
 
 <p>当别人问我你今天干了什么的时候，我哑口无言．</p>
 
 <p>这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．</p>
 
-<p><strong>第二</strong>  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
+<p><strong>第二</strong>  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。</p>
+
+<p>  比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
 发生了break，就想着怎么修复他们。更快速的方法是，直接卸载掉，然后重新安装。</p>
 
 <p>2016.5.29 by Jc</p>
