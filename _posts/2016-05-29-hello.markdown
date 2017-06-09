@@ -53,15 +53,15 @@ Jc 的 Blog 就这么开通了。
 
 1、安装git命令
 
-{% highlight shell %}
-sudo apt-get install git
+{% highlight shell_session %}
+jc@host:~$ sudo apt-get install git
 {% endhighlight %}
 
 2、安装完成之后进行用户配置
 
-{% highlight shell %}
-git config --global user.name "wangjiachun"
-git config --global user.email "your_email@example.com"
+{% highlight shell_session %}
+jc@host:~$ git config --global user.name "wangjiachun"
+jc@host:~$ git config --global user.email "your_email@example.com"
 {% endhighlight %}
 
 3、生成新的SSH密钥并将其添加到ssh代理
@@ -70,13 +70,13 @@ git config --global user.email "your_email@example.com"
 
 通过以下命令开始生成秘钥的流程，并通知Github的email
 
-{% highlight shell %}
-ssh-keygen -t rsa -b 4096 -C “your_email@example.com”
+{% highlight shell_session %}
+jc@host:~$ ssh-keygen -t rsa -b 4096 -C “your_email@example.com”
 {% endhighlight %}
 
 之后会有下面的提示设置秘钥存储目录和输入秘钥的密码
 
-{% highlight shell %}
+{% highlight console %}
 Enter file in which the key is (/Users/you/.ssh/id_rsa): [Hit enter]
 Key has comment '/home/wangjc/.ssh/id_rsa'
 Enter new passphrase (empty for no passphrase): [Type new passphrase]
@@ -101,8 +101,8 @@ Your identification has been saved with the new passphrase.
 
 然后就可以把远程库内的文件下载到本地，在终端输入
 
-{% highlight shell %}
-git clone git@github.com:username/username.github.io
+{% highlight console %}
+jc@host:~$ git clone git@github.com:username/username.github.io
 {% endhighlight %}
 
 如果配置了SSH key的密钥，这里需要验证输入。到此就完成了基本git环境的建立。下面介绍如何对本地库进行操作并同步到服务器上。
@@ -114,22 +114,22 @@ git clone git@github.com:username/username.github.io
 2、提交代码到缓存区，如果只修改了一个文件，就只需要提交这个文件名字，如果修改了多个文件，一个一个地提交会比较慢，
 就可以直接提交所有文件，add命令把待提交的文件暂存到本地缓存中等待提交
 
-{% highlight shell %}
-git add <filename> # 提交一个文件
-git add --all # 提交所有文件
+{% highlight console %}
+jc@host:~$ git add <filename> # 提交一个文件
+jc@host:~$ git add --all # 提交所有文件
 {% endhighlight %}
 
 3、文件add到缓存之后并没有与远程服务器建立连接，使用commit命令来提交最后一次add的结果
 
-{% highlight shell %}
-git commit -m "代码提交信息"
+{% highlight terminal %}
+jc@host:~$ git commit -m "代码提交信息"
 {% endhighlight %}
 
 4、以上都只是在本地的离线操作，相当于准备好了修改后的代码，只等一个命令下达就可以同步到远程服务器上，
 这个命令是长这样婶的
 
-{% highlight shell %}
-git push origin master
+{% highlight terminal %}
+jc@host:~$ git push origin master
 {% endhighlight %}
 
 这里可以把 master 换成你想要推送的任何分支。
@@ -147,8 +147,8 @@ git push origin master
 幸好我已经踩过了一些坑，下面我一步一步介绍如何安装。实际上，这些包是有依赖关系的我们的终极目的是为了安装[jekyll][7]，jekyll是是一个简单的博客形态的静态站点生产机器。它有一个模版目录，其中包含原始文本格式的文档，通过一个转换器（如 Markdown）和我们的 Liquid 渲染器转化成一个完整的可发布的静态网站，你可以发布在任何你喜爱的服务器上。Jekyll 也可以运行在 GitHub Page 上，也就是说，你可以使用 GitHub 的服务来搭建你的项目页面、博客或者网站，而且是完全免费的。听不懂没关系，只需要知道我们用它来把原始的博客文本从markdown形式转换到到浏览器中就可以了。
 jekyll是基于[ruby][8]的，而rvm是ruby的版本管理器，[gem][9]是Ruby 社区的 Gem 托管服务，可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
 就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的
-{% highlight shell %}
-curl -sSL https://get.rvm.io | bash -s stable --ruby
+{% highlight terminal %}
+jc@host:~$ curl -sSL https://get.rvm.io | bash -s stable --ruby
 {% endhighlight %}
 &emsp;&emsp;由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
 对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
@@ -157,9 +157,9 @@ curl -sSL https://get.rvm.io | bash -s stable --ruby
 &emsp;&emsp;有了rvm之后就可以轻松的安装ruby，这里注意一点，github pages为了使版本统一在2017年升级Jekyll3.0，并强制使用rouge语法高亮。而jekyll3.0以上的版本要求
 ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
 建议只安装一个版本的ruby即可
-{% highlight shell %}
-wangjc@ubuntu:$ rvm install 2.3
-wangjc@ubuntu:$ rvm list
+{% highlight console %}
+jc@host:~$ rvm install 2.3
+jc@host:~$ rvm list
 rvm rubies
 
 =* ruby-2.3.3 [ x86_64 ]
@@ -167,37 +167,37 @@ rvm rubies
 # => - current
 # =* - current && default
 #  * - default
-wangjc@ubuntu:$ rvm use 2.3
+jc@host:~$ rvm use 2.3
 {% endhighlight %}
 &emsp;&emsp;之后安装gem，为了防止网络问题，还是直接从官网下载安装包，链接在这里[RubyGems][11]，下载TGZ文件到本地目录并解压安装。
 或者直接本地下载。安装好gem后更新一下版本，
-{% highlight shell %}
-wangjc@ubuntu:$ cd ~/Downloads
-wangjc@ubuntu:$ wget https://rubygems.org/rubygems/rubygems-2.6.12.tgz
-wangjc@ubuntu:$ tar zxvf rubygems-2.6.12.tgz
-wangjc@ubuntu:$ cd rubygems-2.6.12
-wangjc@ubuntu:$ ruby setup.rb
-wangjc@ubuntu:$ gem update --system
+{% highlight console %}
+jc@host:~$ cd ~/Downloads
+jc@host:~$ wget https://rubygems.org/rubygems/rubygems-2.6.12.tgz
+jc@host:~$ tar zxvf rubygems-2.6.12.tgz
+jc@host:~$ cd rubygems-2.6.12
+jc@host:~$ ruby setup.rb
+jc@host:~$ gem update --system
 {% endhighlight %}
 安装好gem之后可以直接安装jekyll，这里先安装github-pages，因为jekyll的页面信息依赖于github-pages
-{% highlight shell %}
-wangjc@ubuntu:$ gem install github-pages
-wangjc@ubuntu:$ gem install jekyll
+{% highlight console %}
+jc@host:~$ gem install github-pages
+jc@host:~$ gem install jekyll
 {% endhighlight %}
 安装jekyll的过程，如果出错，可能是因为网络原因，建议使用[淘宝的源][12]来下载，感谢大熊猫侯佩的贡献。
 
 而nodejs是相对独立的安装包，通过npm来安装
-{% highlight shell %}
-npm install node
+{% highlight console %}
+jc@host:~$ npm install node
 {% endhighlight %}
 
 至此就完成了所有包的安装。使用-v，检查一下版本安装是否正确吧。可以参考一下我的安装
 ![](/img/in-post/post-git-deploy/git-blog-tools.png)
 
 本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了
-{% highlight shell %}
-cd wangjiachun.github.io
-jekyll serve --watch
+{% highlight console %}
+jc@host:~$ cd wangjiachun.github.io
+jc@host:~$ jekyll serve --watch
 {% endhighlight %}
 
 ## 使用sublime编辑文章

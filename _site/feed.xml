@@ -5,9 +5,36 @@
     <description>机器学习初级1段见习生 | 王嘉春，Web &amp; Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 08 Jun 2017 00:16:00 +0800</pubDate>
-    <lastBuildDate>Thu, 08 Jun 2017 00:16:00 +0800</lastBuildDate>
+    <pubDate>Sat, 10 Jun 2017 00:04:29 +0800</pubDate>
+    <lastBuildDate>Sat, 10 Jun 2017 00:04:29 +0800</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>中文分词：预处理</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;“Sometimes, reality is the illusion, and the truth only visible where our eyes can’t see.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;__future__&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;print_function&lt;/span&gt;
+ 
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;logging&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os.path&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;six&lt;/span&gt;
+&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+</description>
+        <pubDate>Fri, 09 Jun 2017 05:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/08/speech/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/08/speech/</guid>
+        
+        <category>自然语言处理</category>
+        
+        <category>分词</category>
+        
+        
+      </item>
     
       <item>
         <title>Neural Networks</title>
@@ -164,12 +191,12 @@ $a_i^{(2)}=f(z_i^{(2)})$。&lt;/p&gt;
 
 &lt;p&gt;1、安装git命令&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;sudo apt-get install git&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell_session&quot; data-lang=&quot;shell_session&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;sudo&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; apt-get install git&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;2、安装完成之后进行用户配置&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git config --global user.name &lt;span class=&quot;s2&quot;&gt;&quot;wangjiachun&quot;&lt;/span&gt;
-git config --global user.email &lt;span class=&quot;s2&quot;&gt;&quot;your_email@example.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell_session&quot; data-lang=&quot;shell_session&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; config --global user.name &quot;wangjiachun&quot;
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; config --global user.email &quot;your_email@example.com&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;3、生成新的SSH密钥并将其添加到ssh代理&lt;/p&gt;
 
@@ -177,15 +204,15 @@ git config --global user.email &lt;span class=&quot;s2&quot;&gt;&quot;your_email
 
 &lt;p&gt;通过以下命令开始生成秘钥的流程，并通知Github的email&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;ssh-keygen -t rsa -b 4096 -C “your_email@example.com”&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell_session&quot; data-lang=&quot;shell_session&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ssh-keygen&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; -t rsa -b 4096 -C “your_email@example.com”&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;之后会有下面的提示设置秘钥存储目录和输入秘钥的密码&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;Enter file &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;which the key is &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;/Users/you/.ssh/id_rsa&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Hit enter]
-Key has comment &lt;span class=&quot;s1&quot;&gt;'/home/wangjc/.ssh/id_rsa'&lt;/span&gt;
-Enter new passphrase &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;empty &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;no passphrase&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Type new passphrase]
-Enter same passphrase again: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;One more &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;luck]
-Your identification has been saved with the new passphrase.&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;Enter file in which the key is (/Users/you/.ssh/id_rsa): [Hit enter]
+Key has comment '/home/wangjc/.ssh/id_rsa'
+Enter new passphrase (empty for no passphrase): [Type new passphrase]
+Enter same passphrase again: [One more time for luck]
+&lt;span class=&quot;err&quot;&gt;Your identification has been saved with the new passphrase.&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;4、把生成的SSH key的公钥加入到Github账户中&lt;/p&gt;
 
@@ -206,7 +233,7 @@ Your identification has been saved with the new passphrase.&lt;/code&gt;&lt;/pre
 
 &lt;p&gt;然后就可以把远程库内的文件下载到本地，在终端输入&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git clone git@github.com:username/username.github.io&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; clone git@github.com:username/username.github.io&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;如果配置了SSH key的密钥，这里需要验证输入。到此就完成了基本git环境的建立。下面介绍如何对本地库进行操作并同步到服务器上。&lt;/p&gt;
 
@@ -217,17 +244,17 @@ Your identification has been saved with the new passphrase.&lt;/code&gt;&lt;/pre
 &lt;p&gt;2、提交代码到缓存区，如果只修改了一个文件，就只需要提交这个文件名字，如果修改了多个文件，一个一个地提交会比较慢，
 就可以直接提交所有文件，add命令把待提交的文件暂存到本地缓存中等待提交&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git add &amp;lt;filename&amp;gt; &lt;span class=&quot;c&quot;&gt;# 提交一个文件&lt;/span&gt;
-git add --all &lt;span class=&quot;c&quot;&gt;# 提交所有文件&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; add &amp;lt;filename&amp;gt; # 提交一个文件
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; add --all # 提交所有文件&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;3、文件add到缓存之后并没有与远程服务器建立连接，使用commit命令来提交最后一次add的结果&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git commit -m &lt;span class=&quot;s2&quot;&gt;&quot;代码提交信息&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; commit -m &quot;代码提交信息&quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;4、以上都只是在本地的离线操作，相当于准备好了修改后的代码，只等一个命令下达就可以同步到远程服务器上，
 这个命令是长这样婶的&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;git push origin master&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; push origin master&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;这里可以把 master 换成你想要推送的任何分支。
 至此完成了基本的版本同步过程。
@@ -245,7 +272,7 @@ git add --all &lt;span class=&quot;c&quot;&gt;# 提交所有文件&lt;/span&gt;&
 jekyll是基于&lt;a href=&quot;https://www.ruby-lang.org/zh_cn/&quot;&gt;ruby&lt;/a&gt;的，而rvm是ruby的版本管理器，&lt;a href=&quot;https://rubygems.org/?locale=zh-CN&quot;&gt;gem&lt;/a&gt;是Ruby 社区的 Gem 托管服务，可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
 就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;curl -sSL https://get.rvm.io | bash -s stable --ruby&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-terminal&quot; data-lang=&quot;terminal&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;curl&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; -sSL https://get.rvm.io | bash -s stable --ruby&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;  由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
 对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
@@ -255,45 +282,45 @@ jekyll是基于&lt;a href=&quot;https://www.ruby-lang.org/zh_cn/&quot;&gt;ruby&l
 ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
 建议只安装一个版本的ruby即可&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm install 2.3
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm list
-rvm rubies
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;rvm&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; install 2.3
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;rvm&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; list
+&lt;/span&gt;rvm rubies
 
-&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; ruby-2.3.3 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; x86_64 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+=* ruby-2.3.3 [ x86_64 ]
 
-&lt;span class=&quot;c&quot;&gt;# =&amp;gt; - current&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;# =* - current &amp;amp;&amp;amp; default&lt;/span&gt;
-&lt;span class=&quot;c&quot;&gt;#  * - default&lt;/span&gt;
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;rvm use 2.3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;ni&quot;&gt;# &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;=&amp;gt;&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; - current
+&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;# &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;=*&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; - current &amp;amp;&amp;amp; default
+&lt;/span&gt;&lt;span class=&quot;ni&quot;&gt;# &lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; * - default
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;rvm&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; use 2.3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;  之后安装gem，为了防止网络问题，还是直接从官网下载安装包，链接在这里&lt;a href=&quot;https://rubygems.org/pages/download&quot;&gt;RubyGems&lt;/a&gt;，下载TGZ文件到本地目录并解压安装。
 或者直接本地下载。安装好gem后更新一下版本，&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;wget https://rubygems.org/rubygems/rubygems-2.6.12.tgz
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;tar zxvf rubygems-2.6.12.tgz
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;rubygems-2.6.12
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;ruby setup.rb
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem update --system&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; ~/Downloads
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;wget&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; https://rubygems.org/rubygems/rubygems-2.6.12.tgz
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;tar&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; zxvf rubygems-2.6.12.tgz
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; rubygems-2.6.12
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;ruby&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; setup.rb
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; update --system&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;安装好gem之后可以直接安装jekyll，这里先安装github-pages，因为jekyll的页面信息依赖于github-pages&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install github-pages
-&lt;span class=&quot;gp&quot;&gt;wangjc@ubuntu:$ &lt;/span&gt;gem install jekyll&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; install github-pages
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;gem&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; install jekyll&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;安装jekyll的过程，如果出错，可能是因为网络原因，建议使用&lt;a href=&quot;http://blog.csdn.net/mydo/article/details/47760539&quot;&gt;淘宝的源&lt;/a&gt;来下载，感谢大熊猫侯佩的贡献。&lt;/p&gt;
 
 &lt;p&gt;而nodejs是相对独立的安装包，通过npm来安装&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;npm install node&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;npm&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; install node&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;至此就完成了所有包的安装。使用-v，检查一下版本安装是否正确吧。可以参考一下我的安装
 &lt;img src=&quot;/img/in-post/post-git-deploy/git-blog-tools.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span class=&quot;nb&quot;&gt;cd &lt;/span&gt;wangjiachun.github.io
-jekyll serve --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; wangjiachun.github.io
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;jekyll&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; serve --watch&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h2 id=&quot;使用sublime编辑文章&quot;&gt;使用sublime编辑文章&lt;/h2&gt;
 

@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="/css/hux-blog.min.css">
 
     <!-- Pygments Github CSS -->
-    <link rel="stylesheet" href="/css/syntax.css">
+    <link rel="stylesheet" href="/css/rouge.css">
 
     <!-- highlighter rouge CSS -->
     <!-- link rel="stylesheet" href="/css/rouge.css" -->
@@ -278,12 +278,12 @@
 
 <p>1、安装git命令</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">sudo apt-get install git</code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell_session" data-lang="shell_session"><span class="w">jc@host:~$ </span><span class="nc">sudo</span><span class="kv"> apt-get install git</span></code></pre></figure>
 
 <p>2、安装完成之后进行用户配置</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">git config --global user.name <span class="s2">"wangjiachun"</span>
-git config --global user.email <span class="s2">"your_email@example.com"</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell_session" data-lang="shell_session"><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> config --global user.name "wangjiachun"
+</span><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> config --global user.email "your_email@example.com"</span></code></pre></figure>
 
 <p>3、生成新的SSH密钥并将其添加到ssh代理</p>
 
@@ -291,15 +291,15 @@ git config --global user.email <span class="s2">"your_email@example.com"</span><
 
 <p>通过以下命令开始生成秘钥的流程，并通知Github的email</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b 4096 -C “your_email@example.com”</code></pre></figure>
+<figure class="highlight"><pre><code class="language-shell_session" data-lang="shell_session"><span class="w">jc@host:~$ </span><span class="nc">ssh-keygen</span><span class="kv"> -t rsa -b 4096 -C “your_email@example.com”</span></code></pre></figure>
 
 <p>之后会有下面的提示设置秘钥存储目录和输入秘钥的密码</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">Enter file <span class="k">in </span>which the key is <span class="o">(</span>/Users/you/.ssh/id_rsa<span class="o">)</span>: <span class="o">[</span>Hit enter]
-Key has comment <span class="s1">'/home/wangjc/.ssh/id_rsa'</span>
-Enter new passphrase <span class="o">(</span>empty <span class="k">for </span>no passphrase<span class="o">)</span>: <span class="o">[</span>Type new passphrase]
-Enter same passphrase again: <span class="o">[</span>One more <span class="nb">time </span><span class="k">for </span>luck]
-Your identification has been saved with the new passphrase.</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console">Enter file in which the key is (/Users/you/.ssh/id_rsa): [Hit enter]
+Key has comment '/home/wangjc/.ssh/id_rsa'
+Enter new passphrase (empty for no passphrase): [Type new passphrase]
+Enter same passphrase again: [One more time for luck]
+<span class="err">Your identification has been saved with the new passphrase.</span></code></pre></figure>
 
 <p>4、把生成的SSH key的公钥加入到Github账户中</p>
 
@@ -320,7 +320,7 @@ Your identification has been saved with the new passphrase.</code></pre></figure
 
 <p>然后就可以把远程库内的文件下载到本地，在终端输入</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">git clone git@github.com:username/username.github.io</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> clone git@github.com:username/username.github.io</span></code></pre></figure>
 
 <p>如果配置了SSH key的密钥，这里需要验证输入。到此就完成了基本git环境的建立。下面介绍如何对本地库进行操作并同步到服务器上。</p>
 
@@ -331,17 +331,17 @@ Your identification has been saved with the new passphrase.</code></pre></figure
 <p>2、提交代码到缓存区，如果只修改了一个文件，就只需要提交这个文件名字，如果修改了多个文件，一个一个地提交会比较慢，
 就可以直接提交所有文件，add命令把待提交的文件暂存到本地缓存中等待提交</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">git add &lt;filename&gt; <span class="c"># 提交一个文件</span>
-git add --all <span class="c"># 提交所有文件</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> add &lt;filename&gt; # 提交一个文件
+</span><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> add --all # 提交所有文件</span></code></pre></figure>
 
 <p>3、文件add到缓存之后并没有与远程服务器建立连接，使用commit命令来提交最后一次add的结果</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">git commit -m <span class="s2">"代码提交信息"</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> commit -m "代码提交信息"</span></code></pre></figure>
 
 <p>4、以上都只是在本地的离线操作，相当于准备好了修改后的代码，只等一个命令下达就可以同步到远程服务器上，
 这个命令是长这样婶的</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">git push origin master</code></pre></figure>
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><span class="w">jc@host:~$ </span><span class="nc">git</span><span class="kv"> push origin master</span></code></pre></figure>
 
 <p>这里可以把 master 换成你想要推送的任何分支。
 至此完成了基本的版本同步过程。
@@ -359,7 +359,7 @@ git add --all <span class="c"># 提交所有文件</span></code></pre></figure>
 jekyll是基于<a href="https://www.ruby-lang.org/zh_cn/">ruby</a>的，而rvm是ruby的版本管理器，<a href="https://rubygems.org/?locale=zh-CN">gem</a>是Ruby 社区的 Gem 托管服务，可以方便快捷地安装、管理ruby及其组件。有了gem这个神器，
 就可以一键安装github-pages和jekyll了。先来安装rvm，官网介绍的安装方法是这样的</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">curl -sSL https://get.rvm.io | bash -s stable --ruby</code></pre></figure>
+<figure class="highlight"><pre><code class="language-terminal" data-lang="terminal"><span class="w">jc@host:~$ </span><span class="nc">curl</span><span class="kv"> -sSL https://get.rvm.io | bash -s stable --ruby</span></code></pre></figure>
 
 <p>  由于国内网络某些不可描述的原因，这其中的链接经常访问不过，如果你用这种方法成功安装了，那恭喜你！可以跳过这块继续安装其他工具。
 对于安装不了的同学，介绍一种来自大熊猫猪·侯佩的巧妙方法
@@ -369,45 +369,45 @@ jekyll是基于<a href="https://www.ruby-lang.org/zh_cn/">ruby</a>的，而rvm�
 ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版本。同时list命令查看系统已安装的所有ruby版本，显式应用某个版本的ruby用use命令，
 建议只安装一个版本的ruby即可</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">wangjc@ubuntu:$ </span>rvm install 2.3
-<span class="gp">wangjc@ubuntu:$ </span>rvm list
-rvm rubies
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">rvm</span><span class="kv"> install 2.3
+</span><span class="w">jc@host:~$ </span><span class="nc">rvm</span><span class="kv"> list
+</span>rvm rubies
 
-<span class="o">=</span><span class="k">*</span> ruby-2.3.3 <span class="o">[</span> x86_64 <span class="o">]</span>
+=* ruby-2.3.3 [ x86_64 ]
 
-<span class="c"># =&gt; - current</span>
-<span class="c"># =* - current &amp;&amp; default</span>
-<span class="c">#  * - default</span>
-<span class="gp">wangjc@ubuntu:$ </span>rvm use 2.3</code></pre></figure>
+<span class="ni"># </span><span class="nc">=&gt;</span><span class="kv"> - current
+</span><span class="ni"># </span><span class="nc">=*</span><span class="kv"> - current &amp;&amp; default
+</span><span class="ni"># </span><span class="kv"> * - default
+</span><span class="w">jc@host:~$ </span><span class="nc">rvm</span><span class="kv"> use 2.3</span></code></pre></figure>
 
 <p>  之后安装gem，为了防止网络问题，还是直接从官网下载安装包，链接在这里<a href="https://rubygems.org/pages/download">RubyGems</a>，下载TGZ文件到本地目录并解压安装。
 或者直接本地下载。安装好gem后更新一下版本，</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">wangjc@ubuntu:$ </span><span class="nb">cd</span> ~/Downloads
-<span class="gp">wangjc@ubuntu:$ </span>wget https://rubygems.org/rubygems/rubygems-2.6.12.tgz
-<span class="gp">wangjc@ubuntu:$ </span>tar zxvf rubygems-2.6.12.tgz
-<span class="gp">wangjc@ubuntu:$ </span><span class="nb">cd </span>rubygems-2.6.12
-<span class="gp">wangjc@ubuntu:$ </span>ruby setup.rb
-<span class="gp">wangjc@ubuntu:$ </span>gem update --system</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">cd</span><span class="kv"> ~/Downloads
+</span><span class="w">jc@host:~$ </span><span class="nc">wget</span><span class="kv"> https://rubygems.org/rubygems/rubygems-2.6.12.tgz
+</span><span class="w">jc@host:~$ </span><span class="nc">tar</span><span class="kv"> zxvf rubygems-2.6.12.tgz
+</span><span class="w">jc@host:~$ </span><span class="nc">cd</span><span class="kv"> rubygems-2.6.12
+</span><span class="w">jc@host:~$ </span><span class="nc">ruby</span><span class="kv"> setup.rb
+</span><span class="w">jc@host:~$ </span><span class="nc">gem</span><span class="kv"> update --system</span></code></pre></figure>
 
 <p>安装好gem之后可以直接安装jekyll，这里先安装github-pages，因为jekyll的页面信息依赖于github-pages</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="gp">wangjc@ubuntu:$ </span>gem install github-pages
-<span class="gp">wangjc@ubuntu:$ </span>gem install jekyll</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">gem</span><span class="kv"> install github-pages
+</span><span class="w">jc@host:~$ </span><span class="nc">gem</span><span class="kv"> install jekyll</span></code></pre></figure>
 
 <p>安装jekyll的过程，如果出错，可能是因为网络原因，建议使用<a href="http://blog.csdn.net/mydo/article/details/47760539">淘宝的源</a>来下载，感谢大熊猫侯佩的贡献。</p>
 
 <p>而nodejs是相对独立的安装包，通过npm来安装</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell">npm install node</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">npm</span><span class="kv"> install node</span></code></pre></figure>
 
 <p>至此就完成了所有包的安装。使用-v，检查一下版本安装是否正确吧。可以参考一下我的安装
 <img src="/img/in-post/post-git-deploy/git-blog-tools.png" alt="" /></p>
 
 <p>本地调试博客可以使用输入命令，然后在浏览器窗口输入 localhost:4000 就可以预览文章了</p>
 
-<figure class="highlight"><pre><code class="language-shell" data-lang="shell"><span class="nb">cd </span>wangjiachun.github.io
-jekyll serve --watch</code></pre></figure>
+<figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">cd</span><span class="kv"> wangjiachun.github.io
+</span><span class="w">jc@host:~$ </span><span class="nc">jekyll</span><span class="kv"> serve --watch</span></code></pre></figure>
 
 <h2 id="使用sublime编辑文章">使用sublime编辑文章</h2>
 
@@ -523,6 +523,10 @@ jekyll serve --watch</code></pre></figure>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
+        				
+                            
+        				
+                            
         				
                             
         				

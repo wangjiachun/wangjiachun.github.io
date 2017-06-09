@@ -1,0 +1,26 @@
+---
+layout:     post
+title:      "中文分词：预处理"
+subtitle:   " \"自然语言处理的必要前提\""
+date:       2017-06-08 21:00:00
+author:     "Jc"
+header-img: "img/in-post/post-NN/server-2160321_960_720.jpg"
+catalog: true
+tags:
+    - 自然语言处理
+    - 分词
+---
+
+> "Sometimes, reality is the illusion, and the truth only visible where our eyes can’t see."
+
+##  前言
+
+{% highlight python %}
+from __future__ import print_function
+ 
+import logging
+import os.path
+import six
+import sys
+
+{% endhighlight %}
