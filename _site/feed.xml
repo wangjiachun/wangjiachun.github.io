@@ -5,9 +5,74 @@
     <description>机器学习初级1段见习生 | 王嘉春，Web &amp; Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 10 Jun 2017 00:04:29 +0800</pubDate>
-    <lastBuildDate>Sat, 10 Jun 2017 00:04:29 +0800</lastBuildDate>
+    <pubDate>Fri, 16 Jun 2017 01:00:16 +0800</pubDate>
+    <lastBuildDate>Fri, 16 Jun 2017 01:00:16 +0800</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
+    
+      <item>
+        <title>spark partitioner: PageRank</title>
+        <description>&lt;blockquote&gt;
+  &lt;p&gt;“A great talker is a great liar.”&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;spark数据分区&quot;&gt;Spark数据分区&lt;/h2&gt;
+&lt;p&gt;  在Spark分布式程序中，通信的代价是很大的，因此控制数据分布一伙的最少的网络传输可以极大地提升整体性能。和单节点的程序需要为记录集合选择合适的数据结构一样，Spark程序可以通过控制RDD的分区方式来减少通信开销。分区并不是对所有应用都有好处的——比如，如果给定RDD只需要被扫描一次，我么完全没有必要对其预先进行分区处理。只有当数据集多次在诸如&lt;strong&gt;连接&lt;/strong&gt;这种基于键的操作中使用时，分区才会有帮助。&lt;/p&gt;
+
+&lt;h3 id=&quot;分区神器partitionby&quot;&gt;分区神器:partitionBy&lt;/h3&gt;
+&lt;p&gt;  Spark中所有的键值对RDD都可以进行分区。系统会根据一个针对键的函数对元素进行分组。尽管Spark没有给出显式控制每个键具体落在哪一个工作节点上的方法（部分原因是Spark即使在某些节点失败时依然可以工作），但Spark可以确保同一组的键出现在同一个节点上。比如，你可能使用哈希分区将一个RDD分成了100个分区，此时键的哈希值&lt;strong&gt;对100取模&lt;/strong&gt;的结果相同的记录会被放在一个节点上。你也可以使用范围分区法，将键在同一个范围区间内的记录都放在同一个节点上。&lt;/p&gt;
+
+&lt;p&gt;  举个栗子说明为什么需要分区。现在我们有两个key-value文件，任务要求我们对他们进行一个join操作（需要根据key对数据进行分组)。这两个文件分别是一个user profile(用户画像，大文件)和一个user action(五分钟的用户行为，小文件)，其格式为(userID, userInfo)和(userID, userAction)，userInfo包含该用户订阅历史，userAction为该用户在一个网站上的操作记录。一个示例应用如下所示：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// 初始化，从hdfs读入userProfile， userLog
+// userData中的元素会根据它们被读取时的来源，即HDFS块所在的节点来分布
+// Spark此时无法获知某个特定的userID对应的记录位于哪个节点上
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SparkContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(...)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/home/temp/userProfile&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 周期性调用函数处理过去五分钟的用户行为
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;processNewLogs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logFileName&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;events&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/home/temp/userLog&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;joined&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userData&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;events&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// RDD of (userID, (userInfo, userAction)) pairs
+&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offTopicVisits&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;joined&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;userID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;userInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;userInfo&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;userAction&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;}.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;println&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;number of visits to subscribed:&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;offTopicVisits&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这段代码虽然可以运行，但是效率不是最高，我们可以对其进行一些优化。低效率的原因是函数processNewLogs包含join()操作，每次调用连接操作会将用到的键的哈希值都求出来，将该哈希值相同的记录通过网络传到同一台机器上，在这台机器上进行连接操作。每次join操作都会计算userData和event的键的哈希值并进行shuffle,虽然这些数据从来都不会变化。解决这个问题很简单：在读入userProfile时，使用partitionBy()转化操作，将这张表转化为哈希分区。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SparkContext&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(...)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;userData&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;/home/temp/userProfile&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partitionBy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HashPartitioner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;// 构造100个分区
+&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;由于在构建userData时调用了partitionBy(),Spark就知道了该RDD根据键的哈希值来分区的，这样Spark就能够利用这一点，寻找到对应的RDD位于哪个分区。具体来说，当调用userData.join(events)时，Spark只会对events进行shuffle操作，把events中特定的userID的记录发送到userData的对应分区所在的那台机器上，程序间通信数据减少，效率大大滴提升了。
+在这个问题中有几点注意问题：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;partitionBy()是transform operation&lt;/li&gt;
+  &lt;li&gt;应该对partitionBy()的结果持久化&lt;/li&gt;
+  &lt;li&gt;partitionBy的参数100表示分区数目，这个值至少应该和集群中的总核心数(--total-executor-cores)相等&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+        <pubDate>Thu, 15 Jun 2017 05:00:00 +0800</pubDate>
+        <link>http://localhost:4000/2017/06/14/spark-partition/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/06/14/spark-partition/</guid>
+        
+        <category>Spark</category>
+        
+        <category>HashPartitioner</category>
+        
+        <category>Scala</category>
+        
+        <category>PageRank</category>
+        
+        <category>join</category>
+        
+        
+      </item>
     
       <item>
         <title>中文分词：预处理</title>

@@ -10,9 +10,9 @@
     <meta name="keyword"  content="王嘉春, Jc, 博客, 个人网站, 互联网, 机器学习">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>王嘉春的博客 | Jc Blog</title>
+    <title>spark partitioner: PageRank - 王嘉春的博客 | Jc Blog</title>
 
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2017/06/14/spark-partition/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -183,261 +183,190 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/in-post/post-NN/server-2160321_960_720.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/in-post/post-NN/server-2160321_960_720.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Jc Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading">艺无止境，诚惶诚恐</span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Spark" title="Spark">Spark</a>
+                        
+                        <a class="tag" href="/tags/#HashPartitioner" title="HashPartitioner">HashPartitioner</a>
+                        
+                        <a class="tag" href="/tags/#Scala" title="Scala">Scala</a>
+                        
+                        <a class="tag" href="/tags/#PageRank" title="PageRank">PageRank</a>
+                        
+                        <a class="tag" href="/tags/#join" title="join">join</a>
+                        
+                    </div>
+                    <h1>spark partitioner: PageRank</h1>
+                    
+                    
+                    <h2 class="subheading"> "通过PageRank演示通信开销"</h2>
+                    
+                    <span class="meta">Posted by Jc on June 14, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>“A great talker is a great liar.”</p>
+</blockquote>
+
+<h2 id="spark数据分区">Spark数据分区</h2>
+<p>  在Spark分布式程序中，通信的代价是很大的，因此控制数据分布一伙的最少的网络传输可以极大地提升整体性能。和单节点的程序需要为记录集合选择合适的数据结构一样，Spark程序可以通过控制RDD的分区方式来减少通信开销。分区并不是对所有应用都有好处的——比如，如果给定RDD只需要被扫描一次，我么完全没有必要对其预先进行分区处理。只有当数据集多次在诸如<strong>连接</strong>这种基于键的操作中使用时，分区才会有帮助。</p>
+
+<h3 id="分区神器partitionby">分区神器:partitionBy</h3>
+<p>  Spark中所有的键值对RDD都可以进行分区。系统会根据一个针对键的函数对元素进行分组。尽管Spark没有给出显式控制每个键具体落在哪一个工作节点上的方法（部分原因是Spark即使在某些节点失败时依然可以工作），但Spark可以确保同一组的键出现在同一个节点上。比如，你可能使用哈希分区将一个RDD分成了100个分区，此时键的哈希值<strong>对100取模</strong>的结果相同的记录会被放在一个节点上。你也可以使用范围分区法，将键在同一个范围区间内的记录都放在同一个节点上。</p>
+
+<p>  举个栗子说明为什么需要分区。现在我们有两个key-value文件，任务要求我们对他们进行一个join操作（需要根据key对数据进行分组)。这两个文件分别是一个user profile(用户画像，大文件)和一个user action(五分钟的用户行为，小文件)，其格式为(userID, userInfo)和(userID, userAction)，userInfo包含该用户订阅历史，userAction为该用户在一个网站上的操作记录。一个示例应用如下所示：</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// 初始化，从hdfs读入userProfile， userLog
+// userData中的元素会根据它们被读取时的来源，即HDFS块所在的节点来分布
+// Spark此时无法获知某个特定的userID对应的记录位于哪个节点上
+</span><span class="k">val</span> <span class="n">sc</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SparkContext</span><span class="o">(...)</span>
+<span class="k">val</span> <span class="n">userData</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="s">"/home/temp/userProfile"</span><span class="o">).</span><span class="n">persist</span><span class="o">()</span>
+
+<span class="c1">// 周期性调用函数处理过去五分钟的用户行为
+</span><span class="k">def</span> <span class="n">processNewLogs</span><span class="o">(</span><span class="n">logFileName</span><span class="k">:</span> <span class="kt">String</span><span class="o">)</span> <span class="o">{</span>
+  <span class="k">val</span> <span class="n">events</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="s">"/home/temp/userLog"</span><span class="o">)</span>
+  <span class="k">val</span> <span class="n">joined</span> <span class="k">=</span> <span class="n">userData</span><span class="o">.</span><span class="n">join</span><span class="o">(</span><span class="n">events</span><span class="o">)</span>  <span class="c1">// RDD of (userID, (userInfo, userAction)) pairs
+</span>
+  <span class="k">val</span> <span class="n">offTopicVisits</span> <span class="k">=</span> <span class="n">joined</span><span class="o">.</span><span class="n">filter</span> <span class="o">{</span>
+    <span class="k">case</span> <span class="o">(</span><span class="n">userID</span><span class="o">,</span> <span class="o">(</span><span class="n">userInfo</span><span class="o">,</span> <span class="n">userAction</span><span class="o">))</span> <span class="k">=&gt;</span>
+      <span class="n">userInfo</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">userAction</span><span class="o">)</span>
+  <span class="o">}.</span><span class="n">count</span>
+
+  <span class="n">println</span><span class="o">(</span><span class="s">"number of visits to subscribed:"</span> <span class="o">+</span> <span class="n">offTopicVisits</span><span class="o">)</span>
+<span class="o">}</span></code></pre></figure>
+
+<p>这段代码虽然可以运行，但是效率不是最高，我们可以对其进行一些优化。低效率的原因是函数processNewLogs包含join()操作，每次调用连接操作会将用到的键的哈希值都求出来，将该哈希值相同的记录通过网络传到同一台机器上，在这台机器上进行连接操作。每次join操作都会计算userData和event的键的哈希值并进行shuffle,虽然这些数据从来都不会变化。解决这个问题很简单：在读入userProfile时，使用partitionBy()转化操作，将这张表转化为哈希分区。</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="k">val</span> <span class="n">sc</span> <span class="k">=</span> <span class="k">new</span> <span class="nc">SparkContext</span><span class="o">(...)</span>
+<span class="k">val</span> <span class="n">userData</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">textFile</span><span class="o">(</span><span class="s">"/home/temp/userProfile"</span><span class="o">)</span>
+  <span class="o">.</span><span class="n">partitionBy</span><span class="o">(</span><span class="k">new</span> <span class="nc">HashPartitioner</span><span class="o">(</span><span class="mi">100</span><span class="o">))</span>   <span class="c1">// 构造100个分区
+</span>  <span class="o">.</span><span class="n">persist</span><span class="o">()</span></code></pre></figure>
+
+<p>由于在构建userData时调用了partitionBy(),Spark就知道了该RDD根据键的哈希值来分区的，这样Spark就能够利用这一点，寻找到对应的RDD位于哪个分区。具体来说，当调用userData.join(events)时，Spark只会对events进行shuffle操作，把events中特定的userID的记录发送到userData的对应分区所在的那台机器上，程序间通信数据减少，效率大大滴提升了。
+在这个问题中有几点注意问题：</p>
+<ul>
+  <li>partitionBy()是transform operation</li>
+  <li>应该对partitionBy()的结果持久化</li>
+  <li>partitionBy的参数100表示分区数目，这个值至少应该和集群中的总核心数(--total-executor-cores)相等</li>
+</ul>
+
+
+                <hr>
+
+                
+
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/06/08/speech/" data-toggle="tooltip" data-placement="top" title="中文分词：预处理">
+                        Previous<br>
+                        <span>中文分词：预处理</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2017/06/14/spark-partition/">
-        <h2 class="post-title">
-            spark partitioner: PageRank
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "通过PageRank演示通信开销"
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  “A great talker is a great liar.”
-
-
-Spark数据分区
-  在Spark分布式程序中，通信的代价是很大的，因此控制数据分布一伙的最少的网络传输可以极大地提升整体性能。和单节点的程序需要为记录集合选择合适的数据结构一样，Spark程序可以通过控制RDD的分区方式来减少通信开销。分区并不是对所有应用都有好处的——比如，如果给定RDD只需要被扫描一次，我么...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Jc on June 14, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/06/08/speech/">
-        <h2 class="post-title">
-            中文分词：预处理
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "自然语言处理的必要前提"
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  “Sometimes, reality is the illusion, and the truth only visible where our eyes can’t see.”
-
-
-前言
-
-from __future__ import print_function
- 
-import logging
-import os.path
-import six
-import sys
-
-
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Jc on June 8, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/05/19/NN/">
-        <h2 class="post-title">
-            Neural Networks
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "神经网络入门学习随记"
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  “It is literally the case that learning language makes you smarter. ”
-
-
-前言
-
-  最近开始接触神经网络，遂记下自己学习过程中遇到的问题和心得。
-简单来说：人工神经网络是一种旨在模仿人脑结构及其功能的信息处理系统。
-人工神经网络的整个发展过程，大致可以分为5个阶段：
-
-  形成时期，M-P模型
-  低谷时期，当时神...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Jc on May 19, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2016/05/29/hello/">
-        <h2 class="post-title">
-            Hello Github
-        </h2>
-        
-        <h3 class="post-subtitle">
-             "Hello World， Hello Blog"
-        </h3>
-        
-        <div class="post-content-preview">
-            
-  “Yeah It’s on. ”
-
-
-前言
-
-Jc 的 Blog 就这么开通了。
-
-跳过废话，直接看技术实现 
-
-2016 年， 总算有个地方可以好好写点东西了。
-
-作为一个程序员， Blog 这种轮子要是挂在大众博客程序上就太没意思了。一是觉得大部分 Blog 服务都太丑，二是觉得不能随便定制不好玩。之前因为太懒没有折腾，结果就一直连个写 Blog 的地儿都没有。
-
-
-
-
-正文
-
-接...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Jc on May 29, 2016
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-
-    		</div>
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
+        				
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                            <img src="/img/post-bg-kuaidi.jpg" />
-                        
-                        
-                            <p>从零开始</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://www.zhihu.com/people/wang-jia-chun-26">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            <li>
-                                <a target="_blank" href="http://weibo.com/1009987724">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                            
-                            <li>
-                                <a target="_blank" href="https://github.com/wangjiachun">
-                                    <span class="fa-stack fa-lg">
-                                        <i class="fa fa-circle fa-stack-2x"></i>
-                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-                                    </span>
-                                </a>
-                            </li>
-                            
-                            
-                        </ul>
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -450,10 +379,52 @@ Jc 的 Blog 就这么开通了。
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
     <!-- Footer -->
@@ -620,6 +591,50 @@ Jc 的 Blog 就这么开通了。
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 
