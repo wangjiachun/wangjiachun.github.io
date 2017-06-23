@@ -291,7 +291,7 @@ pre code {
 .post-container li h4,
 .post-container li h5,
 .post-container li h6 {
-  line-height: 2;
+  line-height: 1;
   margin-top: 20px;
 }
 .post-container .pager li {
@@ -506,7 +506,7 @@ pre code {
 }
 @media only screen and (min-width: 768px) {
   .intro-header {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     /* response on desktop */
   }
 }

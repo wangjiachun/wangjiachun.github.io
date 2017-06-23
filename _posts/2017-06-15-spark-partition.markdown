@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      "spark partitioner: PageRank"
-subtitle:   " \"通过PageRank演示通信开销\""
+title:      "Spark Partitioner: PageRank"
+subtitle:   " \"通过PageRank演示Spark通信开销\""
 date:       2017-06-14 21:00:00
 author:     "Jc"
 header-img: "img/in-post/post-NN/server-2160321_960_720.jpg"
@@ -57,5 +57,35 @@ val userData = sc.textFile("/home/temp/userProfile")
 由于在构建userData时调用了partitionBy(),Spark就知道了该RDD根据键的哈希值来分区的，这样Spark就能够利用这一点，寻找到对应的RDD位于哪个分区。具体来说，当调用userData.join(events)时，Spark只会对events进行shuffle操作，把events中特定的userID的记录发送到userData的对应分区所在的那台机器上，程序间通信数据减少，效率大大滴提升了。
 在这个问题中有几点注意问题：
 * partitionBy()是transform operation
-* 应该对partitionBy()的结果持久化
 * partitionBy的参数100表示分区数目，这个值至少应该和集群中的总核心数(\-\-total-executor-cores)相等
+* partitionBy对RDD进行分区，这个分区方式需要被**持久化**才能被用于后面的RDD转化操作
+
+## 获取RDD的分区方式
+
+在Scala中，RDD的partitioner属性可以用来获取RDD的分区方式。它会返回一个scala.Option对象，这是Scala中用来存放可能存在的对象的容器类。如果存在值的话，这个值会是一个spark.Partitioner对象。这本质上是一个告诉我们RDD中各个键属于哪个分区的函数(但是函数细节对我们是透明的)。
+
+{% highlight scala %}
+scala> val pairs = sc.parallelize(list((1, 1), (2, 2), (3, 3)))
+pairs: spark.RDD[(Int, Int)] = ParallelCollectionRDD[0] at parallelize at <console>:12
+
+scala> pairs.partitioner
+res0: Option[spark.Partitioner] = None
+
+scala> val partitioned = pairs.partitionBy(new spark.HashPartitioner(2))
+paritioned: spark.RDD[(Int, Int)] = ShuffledRDD[1] at partitionBy at <console>:14
+
+scala> partitioned.partitioner
+res1: Option[spark.Partitioner] = Some(spark.HashPartitioner@5137788d)
+{% endhighlight %}
+
+在这段spark shell代码中，firstly，创建了一个没有分区方式信息的pairRDD，其partitioner方法返回None的Option对象。之后通过hashPartition的哈希方法给它一个哈希分区方式，使得Spark可以了解到这个RDD是如何存储到不同的节点上的。在实际应用中，通常还要再分区之后增加持久化操作，即persist()。
+
+## 通过分区节省开销：PageRank
+PageRank算法可以参考[谷歌链接][1]，这里只是简单介绍一下算法的数据集要求以及实施步骤：
+算法会维护两个数据集：一个由（PageID, linkList)的元素组成，包含每个页面的相邻页面的列表；另一个由(pageID, rank)元素组成，包含每个页面的当前排序值。算法步骤如下：
+
+* 将每个页面的排序值初始化为1.0
+* 在每次迭代中，对页面p，向其每个相邻页面发送一个值为$rank(p)/numNeighbors(p)$的贡献
+* 将每个页面的排序值设为0.15 + 0.85 * contributionReceived
+
+[1]: https://en.wikipedia.org/wiki/PageRank

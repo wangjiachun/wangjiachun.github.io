@@ -139,6 +139,8 @@ jc@host:~$ git push origin master
 
 ### 建立本地编译调试环境
 
+&emsp;&emsp;本地编译调试环境支持linux和windows两种，以下内容以ubuntu为例介绍如何建立调试环境，windows下需要安装同样的几个软件包，就不一一介绍，具体方法可以参考 [building static sites with jekyll github pages][21].
+
 &emsp;&emsp;配置好git环境，并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
 或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
 编译环境。建立了本地环境之后，我们可以在本地浏览器预览文章被发布之后的样子，即快速又方便。
@@ -251,9 +253,7 @@ jc@host:~$ jekyll serve --watch
 
 这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．
 
-**第二**  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。
-
-&emsp;&emsp;比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
+**第二**  对于自己不会的东西要善于从网上寻找对应的方法，有些路绕不过去，就换个思路，不要钻牛角尖。比如我想在原来的系统上重新建立本地环境，发现许多已安装的包
 发生了break，就想着怎么修复他们。更快速的方法是，直接卸载掉，然后重新安装。
 
 2016.5.29 by Jc
@@ -280,3 +280,4 @@ jc@host:~$ jekyll serve --watch
 [18]: http://blog.csdn.net/qwe1992314/article/details/52232426
 [19]: http://blog.chinaunix.net/uid-30254565-id-5611263.html
 [20]: http://c758482.r82.cf2.rackcdn.com/sublime-text_build-3059_amd64.deb
+[21]: http://programminghistorian.org/lessons/building-static-sites-with-jekyll-github-pages

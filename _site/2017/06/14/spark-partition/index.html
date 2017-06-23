@@ -10,7 +10,7 @@
     <meta name="keyword"  content="王嘉春, Jc, 博客, 个人网站, 互联网, 机器学习">
     <link rel="shortcut icon" href="/img/favicon.ico">
 
-    <title>spark partitioner: PageRank - 王嘉春的博客 | Jc Blog</title>
+    <title>Spark Partitioner: PageRank - 王嘉春的博客 | Jc Blog</title>
 
     <link rel="canonical" href="http://localhost:4000/2017/06/14/spark-partition/">
 
@@ -215,10 +215,10 @@
                         <a class="tag" href="/tags/#join" title="join">join</a>
                         
                     </div>
-                    <h1>spark partitioner: PageRank</h1>
+                    <h1>Spark Partitioner: PageRank</h1>
                     
                     
-                    <h2 class="subheading"> "通过PageRank演示通信开销"</h2>
+                    <h2 class="subheading"> "通过PageRank演示Spark通信开销"</h2>
                     
                     <span class="meta">Posted by Jc on June 14, 2017</span>
                 </div>
@@ -280,9 +280,38 @@
 在这个问题中有几点注意问题：</p>
 <ul>
   <li>partitionBy()是transform operation</li>
-  <li>应该对partitionBy()的结果持久化</li>
   <li>partitionBy的参数100表示分区数目，这个值至少应该和集群中的总核心数(--total-executor-cores)相等</li>
+  <li>partitionBy对RDD进行分区，这个分区方式需要被<strong>持久化</strong>才能被用于后面的RDD转化操作</li>
 </ul>
+
+<h2 id="获取rdd的分区方式">获取RDD的分区方式</h2>
+
+<p>在Scala中，RDD的partitioner属性可以用来获取RDD的分区方式。它会返回一个scala.Option对象，这是Scala中用来存放可能存在的对象的容器类。如果存在值的话，这个值会是一个spark.Partitioner对象。这本质上是一个告诉我们RDD中各个键属于哪个分区的函数(但是函数细节对我们是透明的)。</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">pairs</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">parallelize</span><span class="o">(</span><span class="n">list</span><span class="o">((</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">)))</span>
+<span class="n">pairs</span><span class="k">:</span> <span class="kt">spark.RDD</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="nc">ParallelCollectionRDD</span><span class="o">[</span><span class="err">0</span><span class="o">]</span> <span class="n">at</span> <span class="n">parallelize</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">12</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">pairs</span><span class="o">.</span><span class="n">partitioner</span>
+<span class="n">res0</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">spark.Partitioner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">None</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">partitioned</span> <span class="k">=</span> <span class="n">pairs</span><span class="o">.</span><span class="n">partitionBy</span><span class="o">(</span><span class="k">new</span> <span class="n">spark</span><span class="o">.</span><span class="nc">HashPartitioner</span><span class="o">(</span><span class="mi">2</span><span class="o">))</span>
+<span class="n">paritioned</span><span class="k">:</span> <span class="kt">spark.RDD</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="nc">ShuffledRDD</span><span class="o">[</span><span class="err">1</span><span class="o">]</span> <span class="n">at</span> <span class="n">partitionBy</span> <span class="n">at</span> <span class="o">&lt;</span><span class="n">console</span><span class="k">&gt;:</span><span class="mi">14</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">partitioned</span><span class="o">.</span><span class="n">partitioner</span>
+<span class="n">res1</span><span class="k">:</span> <span class="kt">Option</span><span class="o">[</span><span class="kt">spark.Partitioner</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Some</span><span class="o">(</span><span class="n">spark</span><span class="o">.</span><span class="nc">HashPartitioner</span><span class="k">@</span><span class="mf">5137788d</span><span class="o">)</span></code></pre></figure>
+
+<p>在这段spark shell代码中，firstly，创建了一个没有分区方式信息的pairRDD，其partitioner方法返回None的Option对象。之后通过hashPartition的哈希方法给它一个哈希分区方式，使得Spark可以了解到这个RDD是如何存储到不同的节点上的。在实际应用中，通常还要再分区之后增加持久化操作，即persist()。</p>
+
+<h2 id="通过分区节省开销pagerank">通过分区节省开销：PageRank</h2>
+<p>PageRank算法可以参考<a href="https://en.wikipedia.org/wiki/PageRank">谷歌链接</a>，这里只是简单介绍一下算法的数据集要求以及实施步骤：
+算法会维护两个数据集：一个由（PageID, linkList)的元素组成，包含每个页面的相邻页面的列表；另一个由(pageID, rank)元素组成，包含每个页面的当前排序值。算法步骤如下：</p>
+
+<ul>
+  <li>将每个页面的排序值初始化为1.0</li>
+  <li>在每次迭代中，对页面p，向其每个相邻页面发送一个值为$rank(p)/numNeighbors(p)$的贡献</li>
+  <li>将每个页面的排序值设为0.15 + 0.85 * contributionReceived</li>
+</ul>
+
 
 
                 <hr>
@@ -391,40 +420,6 @@
 
 
 
-
-<!-- async load function -->
-<script>
-    function async(u, c) {
-      var d = document, t = 'script',
-          o = d.createElement(t),
-          s = d.getElementsByTagName(t)[0];
-      o.src = u;
-      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
-      s.parentNode.insertBefore(o, s);
-    }
-</script>
-<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
-<script>
-    async("http://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
-        anchors.options = {
-          visible: 'always',
-          placement: 'right',
-          icon: '#'
-        };
-        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
-    })
-</script>
-<style>
-    /* place left on bigger screen */
-    @media all and (min-width: 800px) {
-        .anchorjs-link{
-            position: absolute;
-            left: -0.75em;
-            font-size: 1.1em;
-            margin-top : -0.1em;
-        }
-    }
-</style>
 
 
     <!-- Footer -->
