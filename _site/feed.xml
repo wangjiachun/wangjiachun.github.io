@@ -5,8 +5,8 @@
     <description>机器学习初级1段见习生 | 王嘉春，Web &amp; Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Sat, 24 Jun 2017 00:29:31 +0800</pubDate>
-    <lastBuildDate>Sat, 24 Jun 2017 00:29:31 +0800</lastBuildDate>
+    <pubDate>Sun, 25 Jun 2017 00:50:54 +0800</pubDate>
+    <lastBuildDate>Sun, 25 Jun 2017 00:50:54 +0800</lastBuildDate>
     <generator>Jekyll v3.4.3</generator>
     
       <item>
@@ -81,9 +81,40 @@
 
 &lt;ul&gt;
   &lt;li&gt;将每个页面的排序值初始化为1.0&lt;/li&gt;
-  &lt;li&gt;在每次迭代中，对页面p，向其每个相邻页面发送一个值为$rank(p)/numNeighbors(p)$的贡献&lt;/li&gt;
+  &lt;li&gt;在每次迭代中，对页面p，向其每个相邻页面发送一个值为 rank(p)/numNeighbors(p) 的贡献&lt;/li&gt;
   &lt;li&gt;将每个页面的排序值设为0.15 + 0.85 * contributionReceived&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;使用Spark实现PageRank：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-scala&quot; data-lang=&quot;scala&quot;&gt;&lt;span class=&quot;c1&quot;&gt;// reading page link file
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;links&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;objectFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;, &lt;span class=&quot;kt&quot;&gt;Seq&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;])](&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;links&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partitionBy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HashPartitioner&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;persist&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// assign weight to 1.0 for each page
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ranks&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;links&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapValues&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// 10 iteration
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contribution&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;links&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ranks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+		&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;flatMap&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt;
+			&lt;span class=&quot;n&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lk&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lk&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lst&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toDouble&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
+	&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;n&quot;&gt;ranks&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;contribution&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;reduceByKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mapValues&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.15&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.85&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// write as text file
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ranks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;saveAsTextFile&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;output_path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;以上的PageRank算法通过不断更新ranks的值来达到收敛的目的，此处ranks被声明为可变变量。代码通过各种tricks来减小通信开销：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;links每次迭代都会与ranks进行join操作。由于links是一个静态数据集，在这个数据集的基础上进行join操作可以按照links的分区来进行，不需要做shuffle。通常links数据比ranks大很多，因为这个RDD存储的是页面链接的url，而ranks只是存储了一个Double型的页面得分，这个优化操作比不进行分区的实现和mapreduce实现节省了许多通信代价。&lt;/li&gt;
+  &lt;li&gt;persist方法把links保留在内存中，否则每次join操作用到links的时候都要重新计算一遍。&lt;/li&gt;
+  &lt;li&gt;生成ranks的时候使用mapValues可以保留父RDD的分区方式，便于后续join，而且对第一次生成ranks也能有很大帮助。&lt;/li&gt;
+  &lt;li&gt;循环体中的reduceByKey可以保留哈希分区的信息，之后接mapValues可以不修改分区信息，提高下一次join的效率。&lt;/li&gt;
+  &lt;li&gt;为了减少数据在不同executor之间传输，尽量使用mapValues和flatMapValues，因为他们不改变键值。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;引自：Spark快速大数据分析(Holden Karau)_4.5-数据分区&lt;/p&gt;
 
 </description>
         <pubDate>Thu, 15 Jun 2017 05:00:00 +0800</pubDate>
@@ -99,33 +130,6 @@
         <category>PageRank</category>
         
         <category>join</category>
-        
-        
-      </item>
-    
-      <item>
-        <title>中文分词：预处理</title>
-        <description>&lt;blockquote&gt;
-  &lt;p&gt;“Sometimes, reality is the illusion, and the truth only visible where our eyes can’t see.”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-python&quot; data-lang=&quot;python&quot;&gt;&lt;span class=&quot;kn&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;__future__&lt;/span&gt; &lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;print_function&lt;/span&gt;
- 
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;logging&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;os.path&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;six&lt;/span&gt;
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;sys&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-</description>
-        <pubDate>Fri, 09 Jun 2017 05:00:00 +0800</pubDate>
-        <link>http://localhost:4000/2017/06/08/speech/</link>
-        <guid isPermaLink="true">http://localhost:4000/2017/06/08/speech/</guid>
-        
-        <category>自然语言处理</category>
-        
-        <category>分词</category>
         
         
       </item>
@@ -149,7 +153,7 @@
   &lt;li&gt;繁荣时期，各种深度网络的提出&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;更详细的解释可以参考&lt;a href=&quot;http://localhost:4000/attach/人工神经网络的发展及应用2010.pdf&quot;&gt;人工神经网络的发展及应用&lt;/a&gt;。本文的学习路线及符号表示方法均来自于&lt;a href=&quot;http://ufldl.stanford.edu/wiki/index.php/Neural_Networks&quot;&gt;UFLDL Tutorial&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;更详细的解释可以参考&lt;a href=&quot;http://localhost:4000/attach/人工神经网络的发展及应用2010.pdf&quot;&gt;人工神经网络的发展及应用&lt;/a&gt;。本文的学习路线及符号表示方法均来自于&lt;a href=&quot;http://ufldl.stanford.edu/wiki/index.php/Neural_Networks&quot;&gt;UFLDL Tutorial&lt;/a&gt;，有英文版和中文版。&lt;/p&gt;
 
 &lt;p id=&quot;build&quot;&gt;&lt;/p&gt;
 &lt;hr /&gt;
@@ -225,7 +229,7 @@ $a_i^{(2)}=f(z_i^{(2)})$。&lt;/p&gt;
   &amp; \frac{\partial}{\partial b_{i}^{(l)}} J(W,b;x,y) = \delta_i^{(l+1)}
 \end{align*} %]]&gt;&lt;/script&gt;
 
-&lt;p&gt;这样就可以根据批量梯度下降法来根据所有样本更新参数矩阵了。&lt;/p&gt;
+&lt;p&gt;这样就可以根据批量梯度下降法来根据所有样本更新参数矩阵了。一个多层全连接神经网络就产生了。&lt;/p&gt;
 
 </description>
         <pubDate>Sat, 20 May 2017 05:00:00 +0800</pubDate>
@@ -357,7 +361,7 @@ Enter same passphrase again: [One more time for luck]
 
 &lt;h3 id=&quot;建立本地编译调试环境&quot;&gt;建立本地编译调试环境&lt;/h3&gt;
 
-&lt;p&gt;  本地编译调试环境支持linux和windows两种，以下内容以ubuntu为例介绍如何建立调试环境，windows下需要安装同样的几个软件包，就不一一介绍，具体方法可以参考 &lt;a href=&quot;http://programminghistorian.org/lessons/building-static-sites-with-jekyll-github-pages&quot;&gt;building static sites with jekyll github pages&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;  本地编译调试环境支持linux和windows两种，以下内容以ubuntu为例介绍如何建立调试环境，windows下需要安装同样的几个软件包，就不一一介绍，具体方法可以参考 &lt;a href=&quot;http://programminghistorian.org/lessons/building-static-sites-with-jekyll-github-pages&quot;&gt;building static sites with jekyll github pages&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;  配置好git环境，并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
 或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
@@ -418,6 +422,13 @@ ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-console&quot; data-lang=&quot;console&quot;&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;cd&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; wangjiachun.github.io
 &lt;/span&gt;&lt;span class=&quot;w&quot;&gt;jc@host:~$ &lt;/span&gt;&lt;span class=&quot;nc&quot;&gt;jekyll&lt;/span&gt;&lt;span class=&quot;kv&quot;&gt; serve --watch&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
+&lt;p&gt;这里是几个编辑markdown文档的精巧小工具&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://rouge.jneen.net/&quot;&gt;rouge代码调试器&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers&quot;&gt;rouge支持高亮的编程语言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.codecogs.com/latex/eqneditor.php&quot;&gt;在线latex公式编辑器&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h2 id=&quot;使用sublime编辑文章&quot;&gt;使用sublime编辑文章&lt;/h2&gt;
 
 &lt;p&gt;下面介绍的是如何在本地编辑文章，更方便的编辑博客。看了上面这么多建站流程，应该会有点累了，如果不想继续阅读，这部分可以留待以后阅读。&lt;/p&gt;
@@ -462,9 +473,7 @@ ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版
 
 &lt;p&gt;&lt;strong&gt;第一&lt;/strong&gt;  做项目也好，写代码也好，任何事做之前需要明确目标，知道自己在干什么．&lt;/p&gt;
 
-&lt;p&gt;  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．&lt;/p&gt;
-
-&lt;p&gt;当别人问我你今天干了什么的时候，我哑口无言．&lt;/p&gt;
+&lt;p&gt;  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧当别人问我你今天干了什么的时候，我哑口无言．&lt;/p&gt;
 
 &lt;p&gt;这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．&lt;/p&gt;
 

@@ -350,7 +350,7 @@ Enter same passphrase again: [One more time for luck]
 
 <h3 id="建立本地编译调试环境">建立本地编译调试环境</h3>
 
-<p>  本地编译调试环境支持linux和windows两种，以下内容以ubuntu为例介绍如何建立调试环境，windows下需要安装同样的几个软件包，就不一一介绍，具体方法可以参考 <a href="http://programminghistorian.org/lessons/building-static-sites-with-jekyll-github-pages">building static sites with jekyll github pages</a>.</p>
+<p>  本地编译调试环境支持linux和windows两种，以下内容以ubuntu为例介绍如何建立调试环境，windows下需要安装同样的几个软件包，就不一一介绍，具体方法可以参考 <a href="http://programminghistorian.org/lessons/building-static-sites-with-jekyll-github-pages">building static sites with jekyll github pages</a>。</p>
 
 <p>  配置好git环境，并了解了同步代码库的流程之后，就可以通过username.github.io发布、维护和查看自己的博客文章。但是，如果每次有更新，
 或者想看看新发布文章的样式如何，都要去提交到github服务器，然后打开浏览器。这个过程是很繁琐并且费时的，下面介绍如何建立本地
@@ -411,6 +411,13 @@ ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版
 <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="w">jc@host:~$ </span><span class="nc">cd</span><span class="kv"> wangjiachun.github.io
 </span><span class="w">jc@host:~$ </span><span class="nc">jekyll</span><span class="kv"> serve --watch</span></code></pre></figure>
 
+<p>这里是几个编辑markdown文档的精巧小工具</p>
+<ul>
+  <li><a href="http://rouge.jneen.net/">rouge代码调试器</a></li>
+  <li><a href="https://github.com/jneen/rouge/wiki/List-of-supported-languages-and-lexers">rouge支持高亮的编程语言</a></li>
+  <li><a href="http://www.codecogs.com/latex/eqneditor.php">在线latex公式编辑器</a></li>
+</ul>
+
 <h2 id="使用sublime编辑文章">使用sublime编辑文章</h2>
 
 <p>下面介绍的是如何在本地编辑文章，更方便的编辑博客。看了上面这么多建站流程，应该会有点累了，如果不想继续阅读，这部分可以留待以后阅读。</p>
@@ -455,9 +462,7 @@ ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版
 
 <p><strong>第一</strong>  做项目也好，写代码也好，任何事做之前需要明确目标，知道自己在干什么．</p>
 
-<p>  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧．</p>
-
-<p>当别人问我你今天干了什么的时候，我哑口无言．</p>
+<p>  经常有这种事发生：计划今天去北京大学参加一场别开生面的讲座，从宿舍出发，等公交时突然口渴，就去买个西瓜解解渴，买完西瓜从超市出来看到学院路有一个大明星在露天表演，于是过去看了一小时，刚准备走，发现没带公交卡，时间也到了中午索性就下午再去，回去吃个饭，睡个午觉，一不小心睡到了下午５点，想想明天再去吧当别人问我你今天干了什么的时候，我哑口无言．</p>
 
 <p>这个小段子虽然冗长但是比较有代表性，一部分人经常会被各种其他的诱惑和欲望所干扰，导致自己的目标发生了转移，最后想做的事情都没有做好，我们需要对自己负责，是要对自己的每一个行为的后果，发生的动机，以及这个行为在长期和短期目标中的价值多少有一个合理的认识．</p>
 
@@ -523,10 +528,6 @@ ruby必须是2.0以上的，所以我们安装ruby时要装一个至少2.0的版
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-        				
-                            
-        				
-                            
         				
                             
         				

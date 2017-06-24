@@ -4,7 +4,7 @@ title:      "Spark Partitioner: PageRank"
 subtitle:   " \"通过PageRank演示Spark通信开销\""
 date:       2017-06-14 21:00:00
 author:     "Jc"
-header-img: "img/in-post/post-NN/server-2160321_960_720.jpg"
+header-img: "img/in-post/post-spark/spark-partition.jpg"
 catalog: true
 tags:
     - Spark
@@ -85,7 +85,38 @@ PageRank算法可以参考[谷歌链接][1]，这里只是简单介绍一下算�
 算法会维护两个数据集：一个由（PageID, linkList)的元素组成，包含每个页面的相邻页面的列表；另一个由(pageID, rank)元素组成，包含每个页面的当前排序值。算法步骤如下：
 
 * 将每个页面的排序值初始化为1.0
-* 在每次迭代中，对页面p，向其每个相邻页面发送一个值为$rank(p)/numNeighbors(p)$的贡献
+* 在每次迭代中，对页面p，向其每个相邻页面发送一个值为 rank(p)/numNeighbors(p) 的贡献
 * 将每个页面的排序值设为0.15 + 0.85 * contributionReceived
+
+使用Spark实现PageRank：
+{% highlight scala %}
+// reading page link file
+val links = sc.objectFile[(String, Seq[String])]("links")
+	.partitionBy(new HashPartitioner(100))
+	.persist
+// assign weight to 1.0 for each page
+var ranks = links.mapValues(v => 1.0)
+// 10 iteration
+for (i <- 1 to 10) {
+	val contribution = links.join(ranks)
+		.flatMap{
+		case (l,(lst, w)) =>
+			lst.map(lk => (lk, w / lst.size.toDouble))
+	}
+	ranks = contribution.reduceByKey(_ + _).mapValues(v => 0.15 + 0.85 * v)
+}
+// write as text file
+ranks.saveAsTextFile(output_path)
+{% endhighlight %}
+
+以上的PageRank算法通过不断更新ranks的值来达到收敛的目的，此处ranks被声明为可变变量。代码通过各种tricks来减小通信开销：
+* links每次迭代都会与ranks进行join操作。由于links是一个静态数据集，在这个数据集的基础上进行join操作可以按照links的分区来进行，不需要做shuffle。通常links数据比ranks大很多，因为这个RDD存储的是页面链接的url，而ranks只是存储了一个Double型的页面得分，这个优化操作比不进行分区的实现和mapreduce实现节省了许多通信代价。
+* persist方法把links保留在内存中，否则每次join操作用到links的时候都要重新计算一遍。
+* 生成ranks的时候使用mapValues可以保留父RDD的分区方式，便于后续join，而且对第一次生成ranks也能有很大帮助。
+* 循环体中的reduceByKey可以保留哈希分区的信息，之后接mapValues可以不修改分区信息，提高下一次join的效率。
+* 为了减少数据在不同executor之间传输，尽量使用mapValues和flatMapValues，因为他们不改变键值。
+
+引自：Spark快速大数据分析(Holden Karau)_4.5-数据分区
+
 
 [1]: https://en.wikipedia.org/wiki/PageRank

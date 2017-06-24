@@ -185,13 +185,13 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/img/in-post/post-NN/server-2160321_960_720.jpg" width="0" height="0"> -->
+<!-- <img src="/img/in-post/post-spark/spark-partition.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/in-post/post-NN/server-2160321_960_720.jpg')
+        background-image: url('/img/in-post/post-spark/spark-partition.jpg')
     }
 
     
@@ -308,9 +308,40 @@
 
 <ul>
   <li>将每个页面的排序值初始化为1.0</li>
-  <li>在每次迭代中，对页面p，向其每个相邻页面发送一个值为$rank(p)/numNeighbors(p)$的贡献</li>
+  <li>在每次迭代中，对页面p，向其每个相邻页面发送一个值为 rank(p)/numNeighbors(p) 的贡献</li>
   <li>将每个页面的排序值设为0.15 + 0.85 * contributionReceived</li>
 </ul>
+
+<p>使用Spark实现PageRank：</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="c1">// reading page link file
+</span><span class="k">val</span> <span class="n">links</span> <span class="k">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">objectFile</span><span class="o">[(</span><span class="kt">String</span>, <span class="kt">Seq</span><span class="o">[</span><span class="kt">String</span><span class="o">])](</span><span class="s">"links"</span><span class="o">)</span>
+	<span class="o">.</span><span class="n">partitionBy</span><span class="o">(</span><span class="k">new</span> <span class="nc">HashPartitioner</span><span class="o">(</span><span class="mi">100</span><span class="o">))</span>
+	<span class="o">.</span><span class="n">persist</span>
+<span class="c1">// assign weight to 1.0 for each page
+</span><span class="k">var</span> <span class="n">ranks</span> <span class="k">=</span> <span class="n">links</span><span class="o">.</span><span class="n">mapValues</span><span class="o">(</span><span class="n">v</span> <span class="k">=&gt;</span> <span class="mf">1.0</span><span class="o">)</span>
+<span class="c1">// 10 iteration
+</span><span class="k">for</span> <span class="o">(</span><span class="n">i</span> <span class="k">&lt;-</span> <span class="mi">1</span> <span class="n">to</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
+	<span class="k">val</span> <span class="n">contribution</span> <span class="k">=</span> <span class="n">links</span><span class="o">.</span><span class="n">join</span><span class="o">(</span><span class="n">ranks</span><span class="o">)</span>
+		<span class="o">.</span><span class="n">flatMap</span><span class="o">{</span>
+		<span class="k">case</span> <span class="o">(</span><span class="n">l</span><span class="o">,(</span><span class="n">lst</span><span class="o">,</span> <span class="n">w</span><span class="o">))</span> <span class="k">=&gt;</span>
+			<span class="n">lst</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="n">lk</span> <span class="k">=&gt;</span> <span class="o">(</span><span class="n">lk</span><span class="o">,</span> <span class="n">w</span> <span class="o">/</span> <span class="n">lst</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">toDouble</span><span class="o">))</span>
+	<span class="o">}</span>
+	<span class="n">ranks</span> <span class="k">=</span> <span class="n">contribution</span><span class="o">.</span><span class="n">reduceByKey</span><span class="o">(</span><span class="k">_</span> <span class="o">+</span> <span class="k">_</span><span class="o">).</span><span class="n">mapValues</span><span class="o">(</span><span class="n">v</span> <span class="k">=&gt;</span> <span class="mf">0.15</span> <span class="o">+</span> <span class="mf">0.85</span> <span class="o">*</span> <span class="n">v</span><span class="o">)</span>
+<span class="o">}</span>
+<span class="c1">// write as text file
+</span><span class="n">ranks</span><span class="o">.</span><span class="n">saveAsTextFile</span><span class="o">(</span><span class="n">output_path</span><span class="o">)</span></code></pre></figure>
+
+<p>以上的PageRank算法通过不断更新ranks的值来达到收敛的目的，此处ranks被声明为可变变量。代码通过各种tricks来减小通信开销：</p>
+<ul>
+  <li>links每次迭代都会与ranks进行join操作。由于links是一个静态数据集，在这个数据集的基础上进行join操作可以按照links的分区来进行，不需要做shuffle。通常links数据比ranks大很多，因为这个RDD存储的是页面链接的url，而ranks只是存储了一个Double型的页面得分，这个优化操作比不进行分区的实现和mapreduce实现节省了许多通信代价。</li>
+  <li>persist方法把links保留在内存中，否则每次join操作用到links的时候都要重新计算一遍。</li>
+  <li>生成ranks的时候使用mapValues可以保留父RDD的分区方式，便于后续join，而且对第一次生成ranks也能有很大帮助。</li>
+  <li>循环体中的reduceByKey可以保留哈希分区的信息，之后接mapValues可以不修改分区信息，提高下一次join的效率。</li>
+  <li>为了减少数据在不同executor之间传输，尽量使用mapValues和flatMapValues，因为他们不改变键值。</li>
+</ul>
+
+<p>引自：Spark快速大数据分析(Holden Karau)_4.5-数据分区</p>
 
 
 
@@ -322,9 +353,9 @@
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2017/06/08/speech/" data-toggle="tooltip" data-placement="top" title="中文分词：预处理">
+                        <a href="/2017/05/19/NN/" data-toggle="tooltip" data-placement="top" title="Neural Networks">
                         Previous<br>
-                        <span>中文分词：预处理</span>
+                        <span>Neural Networks</span>
                         </a>
                     </li>
                     
@@ -367,10 +398,6 @@
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-        				
-                            
-        				
-                            
         				
                             
         				
