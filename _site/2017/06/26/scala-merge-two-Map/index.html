@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="机器学习初级1段见习生 | 王嘉春，Web & Mobile Lover，Front-End Engineer，UX Designer | 这里是 @Hux黄玄 的个人博客，与你一起发现更大的世界。">
+    <meta name="keyword"  content="王嘉春, Jc, 博客, 个人网站, 互联网, 机器学习">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>Scala: 合并两个Map - 王嘉春的博客 | Jc Blog</title>
+
+    <link rel="canonical" href="http://localhost:4000/2017/06/26/scala-merge-two-Map/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/rouge.css">
+
+    <!-- highlighter rouge CSS -->
+    <!-- link rel="stylesheet" href="/css/rouge.css" -->
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="http://cdn.staticfile.org/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+
+    <!-- mathjax config similar to math.stackexchange -->
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+          tex2jax: {
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+          }
+        });
+    </script>
+
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Queue(function() {
+            var all = MathJax.Hub.getAllJax(), i;
+            for(i=0; i < all.length; i += 1) {
+                all[i].SourceElement().parentNode.className += ' has-jax';
+            }
+        });
+    </script>
+
+    <script type="text/javascript"
+       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+
+    <!-- mathjax config end -->
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Jc Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/portfolio/">Portfolio</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/in-post/post-scala/scala-merge-two-map.jpeg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/in-post/post-scala/scala-merge-two-map.jpeg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Scala" title="Scala">Scala</a>
+                        
+                        <a class="tag" href="/tags/#Map" title="Map">Map</a>
+                        
+                    </div>
+                    <h1>Scala: 合并两个Map</h1>
+                    
+                    
+                    <h2 class="subheading"> "scala中快速简洁地合并两个map"</h2>
+                    
+                    <span class="meta">Posted by Jc on June 26, 2017</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>“You are not in charge of the universe; you are in charge of yourself.”</p>
+</blockquote>
+
+<h2 id="应用场景">应用场景</h2>
+<p>  最近在一个项目中需要把Scala的两个Map合并，合并的时候会遇到相同的键和不同的键，对与相同的键，合并后的值是两个Map的值的和，对于只存在于一个Map中的键保留其值不变，对于下面两个map的合并</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">m1</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span><span class="o">-&gt;</span><span class="mi">10</span><span class="o">,</span> <span class="mi">2</span><span class="o">-&gt;</span><span class="mi">4</span><span class="o">)</span>
+<span class="n">m1</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">4</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">m2</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span><span class="o">-&gt;</span><span class="mi">5</span><span class="o">,</span> <span class="mi">4</span><span class="o">-&gt;</span><span class="mi">8</span><span class="o">)</span>
+<span class="n">m2</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span></code></pre></figure>
+
+<p>其结果是应该是这样的</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> 
+<span class="n">m3</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span></code></pre></figure>
+
+<p>如果我们简单地采用scala中的magic sugar ++ 方法，其结果成为这样</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="n">m1</span> <span class="o">++</span> <span class="n">m2</span>
+<span class="n">res0</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span></code></pre></figure>
+
+<p>这里结果显然不符合预期，我们希望key=2的value是4+5=9，而这里等于5，说明在两个map merge时第二个map的key-value:(2,5)覆盖了第一个map的值(2,4).</p>
+
+<h3 id="solution1-brute-force">Solution1: brute force</h3>
+<p>最简单的方法是for loop，这种方法不但代码冗长而且效率低下，我们想尝试更有效的方法</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">m3</span> <span class="k">=</span> <span class="n">scala</span><span class="o">.</span><span class="n">collection</span><span class="o">.</span><span class="n">mutable</span><span class="o">.</span><span class="nc">Map</span><span class="o">[</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">]()</span>
+<span class="n">res1</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">for</span><span class="o">((</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span><span class="k">&lt;-</span><span class="n">m2</span><span class="o">){</span><span class="k">if</span> <span class="o">(</span><span class="n">m3</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">k</span><span class="o">))</span> <span class="n">m3</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+=</span> <span class="n">m2</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="k">else</span> <span class="n">m3</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="k">=</span> <span class="n">m2</span><span class="o">(</span><span class="n">k</span><span class="o">)}</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">m3</span>
+<span class="n">res2</span><span class="k">:</span> <span class="kt">scala.collection.mutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">5</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">for</span><span class="o">((</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span><span class="k">&lt;-</span><span class="n">m1</span><span class="o">){</span><span class="k">if</span> <span class="o">(</span><span class="n">m3</span><span class="o">.</span><span class="n">contains</span><span class="o">(</span><span class="n">k</span><span class="o">))</span> <span class="n">m3</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="o">+=</span> <span class="n">m1</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="k">else</span> <span class="n">m3</span><span class="o">(</span><span class="n">k</span><span class="o">)</span> <span class="k">=</span> <span class="n">m1</span><span class="o">(</span><span class="n">k</span><span class="o">)}</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">m3</span>
+<span class="n">res3</span><span class="k">:</span> <span class="kt">scala.collection.mutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">)</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">m3</span><span class="o">.</span><span class="n">toMap</span>
+<span class="n">res4</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">)</span></code></pre></figure>
+
+<h3 id="solution2-groupby">Solution2: groupBy</h3>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">list</span> <span class="k">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">toList</span> <span class="o">++</span> <span class="n">m2</span><span class="o">.</span><span class="n">toList</span>
+<span class="n">list</span><span class="k">:</span> <span class="kt">List</span><span class="o">[(</span><span class="kt">Int</span>, <span class="kt">Int</span><span class="o">)]</span> <span class="k">=</span> <span class="nc">List</span><span class="o">((</span><span class="mi">1</span><span class="o">,</span><span class="mi">10</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">),</span> <span class="o">(</span><span class="mi">2</span><span class="o">,</span><span class="mi">5</span><span class="o">),</span> <span class="o">(</span><span class="mi">4</span><span class="o">,</span><span class="mi">8</span><span class="o">))</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">merged</span> <span class="k">=</span> <span class="n">list</span><span class="o">.</span><span class="n">groupBy</span> <span class="o">(</span> <span class="k">_</span><span class="o">.</span><span class="n">_1</span><span class="o">)</span> <span class="o">.</span><span class="n">map</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">)</span> <span class="k">=&gt;</span> <span class="n">k</span> <span class="o">-&gt;</span> <span class="n">v</span><span class="o">.</span><span class="n">map</span><span class="o">(</span><span class="k">_</span><span class="o">.</span><span class="n">_2</span><span class="o">).</span><span class="n">sum</span> <span class="o">}</span>
+<span class="n">merged</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">)</span></code></pre></figure>
+
+<p>此方法先把Map转化成list，然后进行一个groupBy操作，把相同的key聚合到一起，之后进行一个求和。该方法有点是可以处理更多个Map的merge，但缺点也是显而易见的，Map转化为List又转回Map造成了一定开销，并且groupBy代价比较大。还有没有别的方法呢？有的。</p>
+
+<h3 id="solution3-foldleft">Solution3: foldLeft</h3>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">val</span> <span class="n">merged</span> <span class="k">=</span> <span class="o">(</span><span class="n">m1</span> <span class="o">/:</span> <span class="n">m2</span><span class="o">)</span> <span class="o">{</span> <span class="k">case</span> <span class="o">(</span><span class="n">map</span><span class="o">,</span> <span class="o">(</span><span class="n">k</span><span class="o">,</span><span class="n">v</span><span class="o">))</span> <span class="k">=&gt;</span>
+         <span class="n">map</span> <span class="o">+</span> <span class="o">(</span> <span class="n">k</span> <span class="o">-&gt;</span> <span class="o">(</span><span class="n">v</span> <span class="o">+</span> <span class="n">map</span><span class="o">.</span><span class="n">getOrElse</span><span class="o">(</span><span class="n">k</span><span class="o">,</span> <span class="mi">0</span><span class="o">))</span> <span class="o">)</span>
+        <span class="o">}</span>
+<span class="n">merged</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">,</span> <span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">)</span></code></pre></figure>
+
+<p>这部分代码比较抽象，其中(m1 /: m2) 等价于 m2.foldLeft(m1)，可以形象地理解为向左折叠。而foldLeft参数需要接收两个，另外一个参数列表使用case 匹配到一个结果map 和 当前m1中的一个（k,v) pair，这个pair就是foldLeft过程中遍历的每一个值。通过这些操作最终获得我们需要的结果，这个方法已经够简洁高效了，还有更简单的方法吗？有的。</p>
+
+<h3 id="solution4-scalaz">Solution4: scalaz</h3>
+<p>scalaz封装了一个更加优美的二元函数操作符|+|，直接操作两个Map就能得到结果。首先启动scala时附带加入scalaz的包。关于scalaz的说明和下载如下</p>
+<ul>
+  <li><a href="https://github.com/scalaz/scalaz">scalaz in Github</a></li>
+  <li><a href="http://scalaz.github.io/scalaz/">scalaz Document</a></li>
+  <li><a href="http://book2s.com/java/jar/s/scalaz-core-2-11/download-scalaz-core_2.11-7.1.1.html">download jar of scalaz</a>
+从这里已下载到scalaz的jar包之后就可以在启动scala的时候引入这个包</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-shell_session" data-lang="shell_session"><span class="w">$ </span><span class="nc">scala</span><span class="kv"> -cp scalaz-core_2.11-7.1.1.jar </span></code></pre></figure>
+
+<p>在shell中导入scalaz.Scalaz._就可以使用它的隐式“|+|”操作符来merge我们的两个Map了，非常简洁。</p>
+
+<figure class="highlight"><pre><code class="language-scala" data-lang="scala"><span class="n">scala</span><span class="o">&gt;</span> <span class="k">import</span> <span class="nn">scalaz.Scalaz._</span>
+<span class="k">import</span> <span class="nn">scalaz.Scalaz._</span>
+
+<span class="n">scala</span><span class="o">&gt;</span> <span class="n">m1</span> <span class="o">|+|</span> <span class="n">m2</span>
+<span class="n">res5</span><span class="k">:</span> <span class="kt">scala.collection.immutable.Map</span><span class="o">[</span><span class="kt">Int</span>,<span class="kt">Int</span><span class="o">]</span> <span class="k">=</span> <span class="nc">Map</span><span class="o">(</span><span class="mi">2</span> <span class="o">-&gt;</span> <span class="mi">9</span><span class="o">,</span> <span class="mi">4</span> <span class="o">-&gt;</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">1</span> <span class="o">-&gt;</span> <span class="mi">10</span><span class="o">)</span></code></pre></figure>
+
+<h3 id="参考链接">参考链接</h3>
+<ul>
+  <li><a href="https://stackoverflow.com/questions/7076128/best-way-to-merge-two-maps-and-sum-the-values-of-same-key">stackoverflow: Best way to merge two maps and sum the values of same key?</a></li>
+  <li><a href="http://www.cnblogs.com/tugeler/p/5134862.html">scala - 从合并两个Map说开去 - foldLeft 和 foldRight 还有模式匹配</a></li>
+  <li><a href="https://stackoverflow.com/questions/16526282/use-scalaz-in-console-repl-without-creating-a-project">Use scalaz in console repl without creating a project</a></li>
+</ul>
+
+
+
+                <hr>
+
+                
+
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/06/14/spark-partition/" data-toggle="tooltip" data-placement="top" title="Spark Partitioner: PageRank">
+                        Previous<br>
+                        <span>Spark Partitioner: PageRank</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Scala" title="Scala" rel="2">
+                                    Scala
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://www.cnblogs.com/weibao/">weibao</a></li>
+                    
+                        <li><a href=""></a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/wang-jia-chun-26">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="http://weibo.com/1009987724">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-weibo fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+
+
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/wangjiachun">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Jc Blog 2017
+                    <br>
+                    Theme by <a href="http://wangjiachun.github.io">Jc</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="91px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=wangjiachun&repo=wangjiachun.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("http://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-49627206-1';
+    var _gaDomain = 'huangxuan.me';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+<!-- Baidu Tongji -->
+
+<script>
+    // dynamic User by Hux
+    var _baId = '4cc1f2d8f3067386cc5cdb626a202900';
+
+    // Originial
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?" + _baId;
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+</script>
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/icon_wechat.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
